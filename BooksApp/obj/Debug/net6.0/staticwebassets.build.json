@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "Hash": "tquKstOJR51L6kM9eQ28rSQPNefRz19cyXl2eOrt8a4=",
+  "Source": "BooksApp",
+  "BasePath": "_content/BooksApp",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "BooksApp\\wwwroot",
+      "Source": "BooksApp",
+      "ContentRoot": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\",
+      "BasePath": "_content/BooksApp",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\cover1.jpg",
+      "SourceId": "BooksApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\",
+      "BasePath": "_content/BooksApp",
+      "RelativePath": "cover1.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\cover1.jpg"
+    },
+    {
+      "Identity": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\StyleSheet.css",
+      "SourceId": "BooksApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\",
+      "BasePath": "_content/BooksApp",
+      "RelativePath": "StyleSheet.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\StyleSheet.css"
+    }
+  ]
+}

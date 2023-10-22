@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "Add Book";
+}
+
+<a href="~/books/index">Back to Books List</a>
+<h2>Add A Book</h2>
+
+<div class="w-50">
+    <form action="~/books/create" method="post">
+        @*book name*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="BookName" class="form-label pt">Book Name</label>
+            </div>
+            <div class="flex-1">
+                <input type="text" id="BookName" name="BookName" class="form-input"/>
+            </div>
+        </div>
+
+        @*isOngoing*@
+        <div class="form-field flex">
+            <div class="w-25">
+            </div>
+            <div class="flex-1">
+                <input type="checkbox" name="IsOngoing" id="IsOngoing" value="true">
+                <label for="IsOngoing" class="form-label pt">Ongoing?</label>
+            </div>
+        </div>
+
+        @*BookRating*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="BookRating" class="form-label pt">Book Rating</label>
+            </div>
+            <div class="flex-1">
+                <input type="text" id="BookRating" name="BookRating" class="form-input"/>
+            </div>
+        </div>
+
+        @*Author*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="AuthorId" class="form-label pt">Author</label>
+            </div>
+            <div class="flex-1">
+                <select name="AuthorId" id="AuthorId" class="form-input">
+                    <option value="">Please Choose an Author</option>
+                    @foreach (AuthorResponse author in ViewBag.Authors)
+                    {
+                        <option value="@author.AuthorId">@author.AuthorName</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+         @*Publisher*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="Publisher" class="form-label pt">Publisher</label>
+            </div>
+            <div class="flex-1">
+                <input type="text" id="Publisher" name="Publisher" class="form-input"/>
+            </div>
+        </div>
+
+        @*PublishedDate*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="PublishedDate" class="form-label pt">Published Date</label>
+            </div>
+            <div class="flex-1">
+                <input type="date" id="PublishedDate" name="PublishedDate" class="form-input"/>
+            </div>
+        </div>
+
+        @*Genres*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="Genres" class="form-label pt">Genres</label>
+            </div>
+            <div class="flex-1">
+                @foreach (var genre in ViewBag.AvailableGenres)
+                {
+                    <div class="add-check">
+                        <input type="checkbox" id="Genres" name="Genres" value="@genre"/>
+                        @genre
+                    </div>
+                }
+            </div>
+        </div>
+        
+        @*Submit Button*@
+        <div class="form-field flex">
+            <div class="w-25">
+            </div>
+            <div class="flex-1">
+                <button class="button button-blue-back">Add Book</button>
+                @if(ViewBag.Errors != null)
+                {
+                    <div class="text-red">
+                        <ul>
+                            @foreach(var error in ViewBag.Errors)
+                            {
+                                <li class="ml">
+                                    @error
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,15 @@
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\bin\Debug\net6.0\ServiceContracts.deps.json
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\bin\Debug\net6.0\ServiceContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\bin\Debug\net6.0\ServiceContracts.pdb
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\bin\Debug\net6.0\Entities.dll
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\bin\Debug\net6.0\Entities.pdb
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.csproj.AssemblyReference.cache
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.AssemblyInfoInputs.cache
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.AssemblyInfo.cs
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.csproj.CoreCompileInputs.cache
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.csproj.CopyComplete
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\refint\ServiceContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ServiceContracts.pdb
+D:\Comp Sci\Programming\C#\BooksApp\ServiceContracts\obj\Debug\net6.0\ref\ServiceContracts.dll

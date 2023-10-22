@@ -1,0 +1,11 @@
+﻿@if(ViewBag.SortBy == ViewBag.HeaderName && ViewBag.SortOrder == SortOrderOptions.Asc.ToString())
+{
+    <th><a href="~/books/index?searchBy=@(ViewBag.SearchBy)&searchString=@(ViewBag.SearchString)&sortBy=@(ViewBag.HeaderName)&sortOrder=@nameof(SortOrderOptions.Desc)">@(ViewBag.DisplayName)<i class="fa-solid fa-arrow-down-a-z fa-sm"></i></a></th>
+}else if (ViewBag.SortBy == ViewBag.HeaderName && ViewBag.SortOrder == SortOrderOptions.Desc.ToString())
+{
+    <th><a href="~/books/index?searchBy=@(ViewBag.SearchBy)&searchString=@(ViewBag.SearchString)&sortBy=@(ViewBag.HeaderName)&sortOrder=@nameof(SortOrderOptions.Asc)">@(ViewBag.DisplayName)<i class="fa-solid fa-arrow-up-z-a fa-sm"></i></a></th>
+}
+else
+{
+    <th><a href="~/books/index?searchBy=@(ViewBag.SearchBy)&searchString=@(ViewBag.SearchString)&sortBy=@(ViewBag.HeaderName)&sortOrder=@nameof(SortOrderOptions.Asc)">@(ViewBag.DisplayName)</a></th>
+}

@@ -1,0 +1,106 @@
+﻿@model IEnumerable<BookResponse>
+@{
+    ViewBag.Title = "Books";
+}
+
+<form action="~/books/index" method="get">
+    <h1>BOOKS</h1>
+    <a href="~/books/create">Add Book</a>
+    <div class="box w-100">
+        <div class="flex-1">
+            <select class="form-input" name="searchBy">
+                @foreach(var item in ViewBag.SearchFields)
+                {
+                    if(item.Key == ViewBag.SearchBy)
+                    {
+                        <option value="@item.Key" selected="@ViewBag.SearchBy">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="flex-1">
+            <input type="search" id="search" class="form-input" placeholder="Search" name="searchString" value="@ViewBag.SearchString">
+        </div>
+        <div class="flex-1 s-g">
+            <button class="button button-blue-back">Search</button>
+            <button class="button button-blue-back"><a href="~/books/index">Clear</a></button>
+        </div>
+    </div>
+    <table class="table w-100 mt">
+        <thead>
+            <tr>
+                <th>COVER</th>
+                
+                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                {
+                    { "HeaderName", nameof(BookResponse.BookName) },
+                    { "DisplayName", "BOOKS NAME" }
+                })
+
+                <th>RATING</th>
+
+                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                {
+                    { "HeaderName", nameof(BookResponse.Publisher) },
+                    { "DisplayName", "PUBLISHER" }
+                })
+
+                <th>PUBLISHED</th>
+                <th>WRITTEN</th>
+                <th>GENRE(s)</th>
+                <th>AUTHOR</th>
+                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                {
+                    { "HeaderName", nameof(BookResponse.IsOngoing) },
+                    { "DisplayName", "ONGOING" }
+                })
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var n in Model)
+            {
+                <tr>
+                    <td class="book-cover"><img src="~/cover1.jpg"/></td>
+                    <td>@n.BookName</td>
+                    <td>
+                        @for(int i = 0; i < n.BookRating; i++)
+                        {
+                            <i class="fa-solid fa-star fa-xs" style="color:#f9d932"></i>
+                        }                    
+                    </td>
+                    <td>@n.Publisher</td>
+                    <td>@n.PublishedDate?.ToString("dd MMM yyyy")</td>
+                    <td>@n.BookAge Year(s) ago</td>
+                    @*<td>@n.Genre</td>*@
+                    <td>
+                        <div class="genres">
+                            @if (n.Genres != null)
+                            {
+                                @foreach (var genre in n.Genres)
+                                {
+                                    <div class="genre-tag">@genre</div>
+                                }
+                            }
+                        </div>
+                    </td>
+                    @*<td>@n.AuthorName</td>*@
+                    <td>@n.AuthorName</td>
+                    <td>
+                        @if ((bool)@n.IsOngoing)
+                        {
+                            <span>Yes</span>
+                        }
+                        else
+                        {
+                            <span>No</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
