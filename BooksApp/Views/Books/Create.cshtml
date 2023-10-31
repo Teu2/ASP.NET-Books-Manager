@@ -1,4 +1,5 @@
-﻿@{
+﻿@model BookAddRequest
+@{
     ViewBag.Title = "Add Book";
 }
 
@@ -13,7 +14,7 @@
                 <label for="BookName" class="form-label pt">Book Name</label>
             </div>
             <div class="flex-1">
-                <input type="text" id="BookName" name="BookName" class="form-input"/>
+                <input asp-for="BookName" class="form-input"/>
             </div>
         </div>
 
@@ -22,7 +23,7 @@
             <div class="w-25">
             </div>
             <div class="flex-1">
-                <input type="checkbox" name="IsOngoing" id="IsOngoing" value="true">
+                <input asp-for="IsOngoing" type="checkbox" value="true">
                 <label for="IsOngoing" class="form-label pt">Ongoing?</label>
             </div>
         </div>
@@ -33,7 +34,7 @@
                 <label for="BookRating" class="form-label pt">Book Rating</label>
             </div>
             <div class="flex-1">
-                <input type="text" id="BookRating" name="BookRating" class="form-input"/>
+                <input asp-for="BookRating" type="text" class="form-input"/>
             </div>
         </div>
 
@@ -43,12 +44,12 @@
                 <label for="AuthorId" class="form-label pt">Author</label>
             </div>
             <div class="flex-1">
-                <select name="AuthorId" id="AuthorId" class="form-input">
+                <select asp-for="AuthorId" class="form-input" asp-items="@ViewBag.Authors">
                     <option value="">Please Choose an Author</option>
-                    @foreach (AuthorResponse author in ViewBag.Authors)
+                    @*@foreach (var author in ViewBag.Authors)
                     {
                         <option value="@author.AuthorId">@author.AuthorName</option>
-                    }
+                    }*@
                 </select>
             </div>
         </div>
@@ -59,7 +60,7 @@
                 <label for="Publisher" class="form-label pt">Publisher</label>
             </div>
             <div class="flex-1">
-                <input type="text" id="Publisher" name="Publisher" class="form-input"/>
+                <input asp-for="Publisher" class="form-input"/>
             </div>
         </div>
 
@@ -69,7 +70,7 @@
                 <label for="PublishedDate" class="form-label pt">Published Date</label>
             </div>
             <div class="flex-1">
-                <input type="date" id="PublishedDate" name="PublishedDate" class="form-input"/>
+                <input asp-for="PublishedDate" type="date" class="form-input"/>
             </div>
         </div>
 

@@ -24,6 +24,7 @@ namespace ServiceContracts.DTO
         [Required(ErrorMessage = "Publisher name must not be empty")]
         public string? Publisher { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime? PublishedDate { get; set; }
 
         [Required(ErrorMessage = "Genre must not be empty")]

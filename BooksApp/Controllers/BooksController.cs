@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
@@ -20,7 +21,7 @@ namespace BooksApp.Controllers
         }
 
         [Route("/")]
-        [Route("index")] // books/index (book prefix)
+        [Route("[action]")] // books/index (book prefix)
         public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(BookResponse.BookName), SortOrderOptions sortOrder = SortOrderOptions.Asc)
         {
 
@@ -47,7 +48,7 @@ namespace BooksApp.Controllers
             return View(sortedBooks); // Views/Books/Index.cshtml
         }
 
-        [Route("create")]
+        [Route("[action]")]
         [HttpGet] // Action method only accepts GET requets
         public IActionResult Create()
         {
@@ -55,12 +56,14 @@ namespace BooksApp.Controllers
             List<string> availableGenres = GetGenres();
 
             ViewBag.AvailableGenres = availableGenres;
-            ViewBag.Authors = authorRes;
+            ViewBag.Authors = authorRes.Select(x => 
+               new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
+            );
 
             return View();
         }
 
-        [Route("create")]
+        [Route("[action]")]
         [HttpPost] // Action method only accepts POST requets
         public IActionResult Create(BookAddRequest book)
         {
