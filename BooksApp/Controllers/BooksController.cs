@@ -21,7 +21,7 @@ namespace BooksApp.Controllers
         }
 
         [Route("/")]
-        [Route("[action]")] // books/index (book prefix)
+        [Route("[action]")] // --> books/index (book prefix) | [action] refers to whatever name we give the IActionResult E.g [action] == 'index'
         public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(BookResponse.BookName), SortOrderOptions sortOrder = SortOrderOptions.Asc)
         {
 
@@ -48,7 +48,7 @@ namespace BooksApp.Controllers
             return View(sortedBooks); // Views/Books/Index.cshtml
         }
 
-        [Route("[action]")]
+        [Route("create")]
         [HttpGet] // Action method only accepts GET requets
         public IActionResult Create()
         {
@@ -56,9 +56,9 @@ namespace BooksApp.Controllers
             List<string> availableGenres = GetGenres();
 
             ViewBag.AvailableGenres = availableGenres;
-            ViewBag.Authors = authorRes.Select(x => 
-               new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
-            );
+            ViewBag.Authors = authorRes.Select(x =>
+                new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
+            ).ToList(); // Convert the IEnumerable to List<SelectListItem>
 
             return View();
         }
@@ -73,7 +73,9 @@ namespace BooksApp.Controllers
                 List<string> availableGenres = GetGenres();
 
                 ViewBag.AvailableGenres = availableGenres;
-                ViewBag.Authors = authorRes;
+                ViewBag.Authors = authorRes.Select(x =>
+                    new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
+                ).ToList(); // Convert the IEnumerable to List<SelectListItem>
                 ViewBag.Errors = ModelState.Values.SelectMany(n => n.Errors).Select(e => e.ErrorMessage).ToList();
 
                 return View();
@@ -82,6 +84,53 @@ namespace BooksApp.Controllers
             BookResponse bookRes = _booksService.AddBook(book);
             
             return RedirectToAction("Index", "Books");
+        }
+
+        [HttpGet] // loading create view
+        [Route("[action]/{bookId}")]
+        public IActionResult Edit(Guid? bookId) // Edit.cshtml
+        {
+            List<AuthorResponse> authorRes = _authorsService.GetAllAuthors();
+            List<string> availableGenres = GetGenres();
+
+            ViewBag.AvailableGenres = availableGenres;
+            ViewBag.Authors = authorRes.Select(x =>
+                new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
+            ).ToList(); // Convert the IEnumerable to List<SelectListItem>
+
+            BookResponse? bookRes = _booksService.GetBookById(bookId);
+            if (bookRes == null) return RedirectToAction("Index"); // if no valid book response return to index.cshtml
+
+            BookUpdateRequest bookUpdateReq = bookRes.ToBookUpdateRequest();
+
+            return View(bookUpdateReq);
+        }
+
+        [HttpPost] // handling submit for post - edit.cshtml
+        [Route("[action]/{bookId}")]
+        public IActionResult Edit(BookUpdateRequest bookUpdateReq, Guid bookId) // Edit.cshtml
+        {
+            BookResponse? bookRes = _booksService.GetBookById(bookUpdateReq.BookId);
+            if (bookRes == null) return RedirectToAction("Index");
+
+            if (ModelState.IsValid)
+            {
+                BookResponse bookUpdated = _booksService.UpdateBook(bookUpdateReq);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                List<AuthorResponse> authorRes = _authorsService.GetAllAuthors();
+                List<string> availableGenres = GetGenres();
+
+                ViewBag.AvailableGenres = availableGenres;
+                ViewBag.Authors = authorRes.Select(x =>
+                    new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
+                ).ToList(); // Convert the IEnumerable to List<SelectListItem>
+                ViewBag.Errors = ModelState.Values.SelectMany(n => n.Errors).Select(e => e.ErrorMessage).ToList();
+
+                return View(bookRes.ToBookUpdateRequest());
+            }
         }
 
         public List<string> GetGenres()
@@ -106,6 +155,28 @@ namespace BooksApp.Controllers
             };
 
             return availableGenres;
+        }
+
+        [HttpGet]
+        [Route("[action]/{bookId}")]
+        public IActionResult Delete(Guid? bookId)
+        {
+            BookResponse? booksRes = _booksService.GetBookById(bookId);
+            if (booksRes == null) return RedirectToAction("index");
+
+            return View(booksRes);
+        }
+
+        [HttpPost]
+        [Route("[action]/{bookId}")]
+        public IActionResult Delete(BookUpdateRequest bookUpdateReq)
+        {
+            BookResponse? bookRes = _booksService.GetBookById(bookUpdateReq.BookId);
+            if (bookRes == null) return RedirectToAction("index");
+
+            _booksService.DeleteBook(bookUpdateReq.BookId);
+
+            return RedirectToAction("index");
         }
     }
 }

@@ -18,6 +18,7 @@ namespace ServiceContracts.Enums
         Isekai,
         SciFi,
         Shounen,
-        Sports
+        Sports,
+        Unknown
     }
 }

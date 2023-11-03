@@ -4,8 +4,9 @@
 }
 
 <form asp-controller="Books" asp-action="Index" method="get">
-    <h1>BOOKS</h1>
-    <a href="~/books/create">Add Book</a>
+    <h1>BOOKS LIST</h1>
+    <button class="button button-blue-back" asp-controller="Books" asp-action="Create"><i class="fa-solid fa-book"></i> Add Book</button>
+    
     <div class="box w-100">
         <div class="flex-1">
             <select class="form-input" name="searchBy">
@@ -26,8 +27,9 @@
             <input type="search" id="search" class="form-input" placeholder="Search" name="searchString" value="@ViewBag.SearchString">
         </div>
         <div class="flex-1 s-g">
-            <button class="button button-blue-back">Search</button>
-            <button class="button button-blue-back"><a href="~/books/index">Clear</a></button>
+            <button class="button button-blue-back" asp-controller="Books" asp-action="Index"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+            @*<button class="button button-blue-back"><i class="fa-solid fa-magnifying-glass"></i> Search</button>*@
+            <button class="button button-blue-back"><a href="~/books/index"><i class="fa-solid fa-rotate-right"></i> Clear</a></button>
         </div>
     </div>
     <table class="table w-100 mt">
@@ -52,12 +54,18 @@
                 <th>PUBLISHED</th>
                 <th>WRITTEN</th>
                 <th>GENRE(s)</th>
-                <th>AUTHOR</th>
+                @*<th>AUTHOR</th>*@
+                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                {
+                    { "HeaderName", nameof(BookResponse.AuthorName) },
+                    { "DisplayName", "AUTHOR" }
+                })
                 @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
                 {
                     { "HeaderName", nameof(BookResponse.IsOngoing) },
                     { "DisplayName", "ONGOING" }
                 })
+                <th>OPTIONS</th>
             </tr>
         </thead>
         <tbody>
@@ -75,7 +83,6 @@
                     <td>@n.Publisher</td>
                     <td>@n.PublishedDate?.ToString("dd MMM yyyy")</td>
                     <td>@n.BookAge Year(s) ago</td>
-                    @*<td>@n.Genre</td>*@
                     <td>
                         <div class="genres">
                             @if (n.Genres != null)
@@ -87,17 +94,27 @@
                             }
                         </div>
                     </td>
-                    @*<td>@n.AuthorName</td>*@
                     <td>@n.AuthorName</td>
                     <td>
-                        @if ((bool)@n.IsOngoing)
+                        @if (@n.IsOngoing.HasValue)
                         {
-                            <span>Yes</span>
+                            if (@n.IsOngoing.Value)
+                            {
+                                <span>Ongoing</span>
+                            }
+                            else
+                            {
+                                <span>Completed</span>
+                            }
                         }
                         else
                         {
-                            <span>No</span>
+                            <span>Completed</span>
                         }
+                    </td>
+                    <td> @*Edit and Delete buttons for BooksController.cs & Edit IActionMethod *@
+                        <button class="button button-blue-back" asp-controller="Books" asp-action="Edit" asp-route-bookId="@n.BookId"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="button button-red-back" asp-controller="Books" asp-action="Delete" asp-route-bookId="@n.BookId"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             }

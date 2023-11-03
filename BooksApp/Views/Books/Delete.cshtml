@@ -1,0 +1,57 @@
+﻿@model BookResponse
+@{
+    ViewBag.Title = "Edit Book";
+}
+
+<a href="~/books/index">Back to Books List</a>
+<h2>Edit a book</h2>
+
+<div class="w-50">
+    <form asp-controller="Books" asp-action="Delete" method="post">
+        
+        @*Submit the bookid but keep it hidden users don't need to see it\*@
+        <input type="hidden" asp-for="BookId">
+
+        @*book name*@
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="BookName" class="form-label pt">Book Name</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="BookName" class="form-input"/>
+                <span asp-validation-for="BookName" class="text-red"></span>
+            </div>
+        </div>
+        
+        @*Delete Button*@
+        <div class="form-field flex">
+            <div class="w-25">
+            </div>
+            <div class="flex-1">
+                <button class="button button-red-back">Delete Book</button>
+                @if(ViewBag.Errors != null)
+                {
+                    <div class="text-red">
+                        <ul>
+                            @foreach(var error in ViewBag.Errors)
+                            {
+                                <li class="ml">
+                                    @error
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+@*jquery validation | cross site caching | Fallback scripts*@
+
+@section scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer" asp-fallback-test="window.jQuery" asp-fallback-src="~/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js" integrity="sha512-xq+Vm8jC94ynOikewaQXMEkJIOBp7iArs3IhFWSWdRT3Pq8wFz46p+ZDFAR7kHnSFf+zUv52B3prRYnbDRdgog==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+}

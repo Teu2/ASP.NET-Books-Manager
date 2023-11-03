@@ -230,6 +230,7 @@ namespace Services
             // update matching returned book with bookUpdateRequest details
             book.BookName = bookUpdateRequest.BookName;
             book.PublishedDate = bookUpdateRequest.PublishedDate;
+            book.BookRating = bookUpdateRequest.BookRating;
             book.Publisher = bookUpdateRequest.Publisher;
             book.AuthorId = bookUpdateRequest.AuthorId;
             book.Genre = bookUpdateRequest.Genre.ToString();

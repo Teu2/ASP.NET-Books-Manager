@@ -37,7 +37,6 @@ namespace ServiceContracts.DTO
 
         public Guid AuthorId { get; set; }
 
-        [Required(ErrorMessage = "IsOngoing must be true or false")]
         public bool? IsOngoing { get; set; }
 
         public Book ToBook() // convert BookAddRequest to a Book object type

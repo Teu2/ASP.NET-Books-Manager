@@ -50,7 +50,9 @@ namespace ServiceContracts.DTO
                 BookRating = BookRating,
                 Publisher = Publisher,
                 PublishedDate = PublishedDate,
-                Genre = (GenreOptions)Enum.Parse(typeof(GenreOptions), Genre, true),
+                Genre = !string.IsNullOrEmpty(Genre)
+                        ? (GenreOptions)Enum.Parse(typeof(GenreOptions), Genre, true)
+                        : GenreOptions.Unknown,
                 Genres = Genres,
                 AuthorId = AuthorId,
                 IsOngoing = IsOngoing,
