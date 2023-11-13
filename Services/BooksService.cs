@@ -15,60 +15,13 @@ namespace Services
     public class BooksService : IBooksService
     {
         // private field
-        private readonly List<Book> _books;
+        private readonly BooksDbContext _dbContext;
         private readonly IAuthorsService _authorsService;
 
-        public BooksService(bool init = true)
+        public BooksService(BooksDbContext booksDbContext, IAuthorsService authorsService)
         {
-            _books = new List<Book>();
-            _authorsService = new AuthorsService();
-
-            if (init)
-            {
-                _books.AddRange(new List<Book>()
-                {
-                    new Book()
-                    {
-                        BookId = Guid.Parse("1a895104-1e8f-4c05-9cf0-c09a3adcd3a9"),
-                        BookName = "Book A", BookRating = 4, Publisher = "Feedbug",
-                        PublishedDate = DateTime.Parse("2023-07-12"), Genres = "Action, Comedy", // $"{Enums.GenreOptions.Adventure}, {Enums.GenreOptions.Comedy}"
-                        IsOngoing = false, AuthorId = Guid.Parse("6CB6A381-C136-4AC8-8476-0FCB20F06F2B")
-                    },
-
-                    new Book()
-                    {
-                        BookId = Guid.Parse("d798fc05-fe54-4a2e-ae82-9955a2dc0a56"),
-                        BookName = "Book B", BookRating = 3, Publisher = "OTK",
-                        PublishedDate = DateTime.Parse("2023-04-08"), Genres = "Drama, Comedy, Adventure, Horror",
-                        IsOngoing = true, AuthorId = Guid.Parse("7275844C-6D85-41AE-9292-9F4C66197492")
-                    },
-
-                    new Book()
-                    {
-                        BookId = Guid.Parse("1aab8de6-efd1-4281-8a7b-56eb7340d062"),
-                        BookName = "Book C", BookRating = 5, Publisher = "Asura Scans",
-                        PublishedDate = DateTime.Parse("2023-04-09"), Genres = "Horror",
-                        IsOngoing = false, AuthorId = Guid.Parse("976CD651-EA40-4138-A68A-9EFE92EB6337")
-                    },
-
-                    new Book()
-                    {
-                        BookId = Guid.Parse("47c1d1e3-0fde-4b04-8ee6-219ca83e19cd"),
-                        BookName = "Book D", BookRating = 5, Publisher = "Riot Games",
-                        PublishedDate = DateTime.Parse("2023-04-10"), Genres = "One Shot",
-                        IsOngoing = true, AuthorId = Guid.Parse("48B6490A-4DDB-4606-99E4-F97641FBDCC7")
-                    },
-
-                    new Book()
-                    {
-                        BookId = Guid.Parse("1df9ec41-ff95-46e9-b1b8-b445f9cde561"),
-                        BookName = "Book E", BookRating = 2, Publisher = "Bipo Translations",
-                        PublishedDate = DateTime.Parse("2023-04-11"), Genres = "Historical, Fantasy",
-                        IsOngoing = true, AuthorId = Guid.Parse("0E24B3F8-2167-43C7-8648-7442BA71E15A")
-                    },
-
-                }); ;
-            }
+            _dbContext = booksDbContext;
+            _authorsService = authorsService;
         }
 
         private string FormatDate(int year, int month, int day)
@@ -98,7 +51,10 @@ namespace Services
             // Return - convert to book, generate an Id, add new book to list of books and return book as book response
             Book book = bookAddRequest.ToBook();
             book.BookId = new Guid();
-            _books.Add(book);
+
+            // Add book
+            _dbContext.Books.Add(book);
+            _dbContext.SaveChanges();
 
             BookResponse bookRes = ConvertBookToBookResponse(book);
 
@@ -107,35 +63,17 @@ namespace Services
 
         public List<BookResponse> GetAllBooks()
         {
-            //List<BookResponse> books = new();
-
-            //foreach(var n in _books)
-            //{
-            //    books.Add(ConvertBookToBookResponse(n));
-            //}
-
-            return _books.Select(n => ConvertBookToBookResponse(n)).ToList();
+            return _dbContext.Books.ToList().Select(n => ConvertBookToBookResponse(n)).ToList(); // SELECT * from books
         }
 
         public BookResponse? GetBookById(Guid? bookId)
         {
-            if(bookId == null) return null;
-            Book? book;
+            if (bookId == null) return null;
 
-            foreach(var currentBook in _books)
-            {
-                if (currentBook.BookId == bookId)
-                {
-                    book = currentBook;
-                    if (book == null) return null;
-                    return ConvertBookToBookResponse(book);  // book.ToBookResponse();
-                }
-            }
+            Book? book = _dbContext.Books.FirstOrDefault(temp => temp.BookId == bookId);
+            if (book == null) return null;
 
-            //Book? book = _books.FirstOrDefault(temp => temp.BookId == bookId);
-            //if (book == null) return null;
-
-            return null;
+            return ConvertBookToBookResponse(book);
         }
 
         public List<BookResponse> GetFilteredBooks(string searchBy, string? searchString)
@@ -224,10 +162,10 @@ namespace Services
 
             Services.Helpers.ValidationHelper.ValidateModels(bookUpdateRequest);
 
-            Book? book = _books.FirstOrDefault(x => x.BookId == bookUpdateRequest.BookId);
+            Book? book = _dbContext.Books.FirstOrDefault(x => x.BookId == bookUpdateRequest.BookId);
             if (book == null) throw new ArgumentException("Given book doesn't exist");
 
-            // update matching returned book with bookUpdateRequest details
+            // update matching returned book with bookUpdateRequest details | Entitystate.modified
             book.BookName = bookUpdateRequest.BookName;
             book.PublishedDate = bookUpdateRequest.PublishedDate;
             book.BookRating = bookUpdateRequest.BookRating;
@@ -237,6 +175,8 @@ namespace Services
             book.Genres = bookUpdateRequest.Genres;
             book.IsOngoing = bookUpdateRequest.IsOngoing;
 
+            _dbContext.SaveChanges(); // save changes
+
             return ConvertBookToBookResponse(book);
         }
 
@@ -244,10 +184,11 @@ namespace Services
         {
             if (bookId == null) throw new ArgumentNullException(nameof(bookId));
 
-            Book? book = _books.FirstOrDefault(x => x.BookId == bookId);
+            Book? book = _dbContext.Books.FirstOrDefault(x => x.BookId == bookId); // check if book is valid
             if (book == null) return false;
 
-            _books.RemoveAll(x => x.BookId == bookId);
+            _dbContext.Books.Remove(_dbContext.Books.First(c => c.BookId == bookId));
+            _dbContext.SaveChanges();
 
             return true;
         }

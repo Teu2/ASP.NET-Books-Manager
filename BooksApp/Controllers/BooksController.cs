@@ -162,7 +162,7 @@ namespace BooksApp.Controllers
         public IActionResult Delete(Guid? bookId)
         {
             BookResponse? booksRes = _booksService.GetBookById(bookId);
-            if (booksRes == null) return RedirectToAction("index");
+            if (booksRes == null) return RedirectToAction("index"); // issue when pressing edit or delete is here | bookRes is null
 
             return View(booksRes);
         }
