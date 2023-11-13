@@ -31,7 +31,7 @@ namespace BooksApp.Controllers
                 { nameof(BookResponse.BookRating), "Book Rating"},
                 { nameof(BookResponse.Publisher), "Publisher"},
                 { nameof(BookResponse.PublishedDate), "Published Date"},
-                { nameof(BookResponse.Genres), "Genres"},
+                { nameof(BookResponse.Genress), "Genres"},
                 { nameof(BookResponse.IsOngoing), "Is Ongoing"},
                 { nameof(BookResponse.AuthorId), "Author"},
             };

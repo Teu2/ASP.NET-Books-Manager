@@ -33,7 +33,7 @@ namespace ServiceContracts.DTO
         public GenreOptions Genre { get; set; }
 
         [Required(ErrorMessage = "Genres must not be empty")]
-        public List<string> Genres { get; set; }
+        public string? Genres { get; set; }
 
         public Guid AuthorId { get; set; }
 

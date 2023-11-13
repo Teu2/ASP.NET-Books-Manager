@@ -8,10 +8,12 @@ namespace Services
     {
         // private field
         private readonly List<Author> _authors;
+        private readonly BooksDbContext _dbContext;
 
-        public AuthorsService(bool init = true) // default init value is true
+        public AuthorsService(BooksDbContext booksDbContext, bool init = true) // default init value is true
         {
             _authors = new List<Author>();
+            _dbContext = booksDbContext;
 
             if (init)
             {

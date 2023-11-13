@@ -20,7 +20,7 @@ namespace ServiceContracts.DTO
         public string? Publisher { get; set; } // email or name?
         public DateTime? PublishedDate { get; set; }
         public string? Genre { get; set; }
-        public List<string>? Genres { get; set; }
+        public List<string>? Genress { get; set; }
         public Guid AuthorId { get; set; }
         public string? AuthorName { get; set; }
         public bool? IsOngoing { get; set; }
@@ -53,7 +53,7 @@ namespace ServiceContracts.DTO
                 Genre = !string.IsNullOrEmpty(Genre)
                         ? (GenreOptions)Enum.Parse(typeof(GenreOptions), Genre, true)
                         : GenreOptions.Unknown,
-                Genres = Genres,
+                Genres = Genress.ToString(),
                 AuthorId = AuthorId,
                 IsOngoing = IsOngoing,
             };
@@ -75,11 +75,20 @@ namespace ServiceContracts.DTO
                 Publisher = book.Publisher,
                 PublishedDate = book.PublishedDate,
                 Genre = book.Genre,
-                Genres = book.Genres,
-                AuthorId = book.AuthorId,
+                Genress = ConvertToListString(book.Genres),
+                AuthorId = (Guid)book.AuthorId,
                 IsOngoing = book.IsOngoing,
                 BookAge = GetBookAge(book)
             };
+        }
+
+        public static List<string> ConvertToListString(string Genres)
+        {
+            // split string into an array using comma delimiter
+            string[] genreArray = Genres.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            List<string> genreList = genreArray.ToList(); // convert  array to a List<string>
+            return genreList;
         }
 
         private static double GetBookAge(Book book)

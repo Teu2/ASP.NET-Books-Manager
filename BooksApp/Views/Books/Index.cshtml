@@ -30,6 +30,7 @@
             <button class="button button-blue-back" asp-controller="Books" asp-action="Index"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
             @*<button class="button button-blue-back"><i class="fa-solid fa-magnifying-glass"></i> Search</button>*@
             <button class="button button-blue-back"><a href="~/books/index"><i class="fa-solid fa-rotate-right"></i> Clear</a></button>
+            @*<button class="button button-blue-back"><a href="~/books/index"><i class="fa-solid fa-rotate-right"></i> Clear</a></button>*@
         </div>
     </div>
     <table class="table w-100 mt">
@@ -85,9 +86,9 @@
                     <td>@n.BookAge Year(s) ago</td>
                     <td>
                         <div class="genres">
-                            @if (n.Genres != null)
+                            @if (n.Genress != null)
                             {
-                                @foreach (var genre in n.Genres)
+                                @foreach (var genre in n.Genress)
                                 {
                                     <div class="genre-tag">@genre</div>
                                 }

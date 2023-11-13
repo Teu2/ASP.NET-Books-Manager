@@ -1,9 +1,13 @@
-﻿namespace Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Entities
 {
     public class Author
     {
         // domain model for author details
-        public Guid AuthorId { get; set; }
+        [Key]
+        public Guid AuthorId { get; set; } // AuthorId is primary key!
+
         public string? AuthorName { get; set; }
     }
 }

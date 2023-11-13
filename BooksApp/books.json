@@ -1,0 +1,22 @@
+[
+  {
+    "BookId": "1a895104-1e8f-4c05-9cf0-c09a3adcd3a9",
+    "BookName": "Book A",
+    "BookRating": 4,
+    "Publisher": "Feedbug",
+    "PublishedDate": "2023-07-12",
+    "Genres": "Action, Comedy",
+    "IsOngoing": false,
+    "AuthorId": "6CB6A381-C136-4AC8-8476-0FCB20F06F2B"
+  },
+  {
+    "BookId": "d798fc05-fe54-4a2e-ae82-9955a2dc0a56",
+    "BookName": "Book B",
+    "BookRating": 5,
+    "Publisher": "OTK",
+    "PublishedDate": "2023-07-12",
+    "Genres": "Drama, Comedy, Adventure, Horror",
+    "IsOngoing": true,
+    "AuthorId": "48B6490A-4DDB-4606-99E4-F97641FBDCC7"
+  }
+]

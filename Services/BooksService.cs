@@ -31,7 +31,7 @@ namespace Services
                     {
                         BookId = Guid.Parse("1a895104-1e8f-4c05-9cf0-c09a3adcd3a9"),
                         BookName = "Book A", BookRating = 4, Publisher = "Feedbug",
-                        PublishedDate = DateTime.Parse("2023-07-12"), Genres = new List<string> { "Action", "Comedy" }, // $"{Enums.GenreOptions.Adventure}, {Enums.GenreOptions.Comedy}"
+                        PublishedDate = DateTime.Parse("2023-07-12"), Genres = "Action, Comedy", // $"{Enums.GenreOptions.Adventure}, {Enums.GenreOptions.Comedy}"
                         IsOngoing = false, AuthorId = Guid.Parse("6CB6A381-C136-4AC8-8476-0FCB20F06F2B")
                     },
 
@@ -39,7 +39,7 @@ namespace Services
                     {
                         BookId = Guid.Parse("d798fc05-fe54-4a2e-ae82-9955a2dc0a56"),
                         BookName = "Book B", BookRating = 3, Publisher = "OTK",
-                        PublishedDate = DateTime.Parse("2023-04-08"), Genres = new List<string> { "Drama", "Comedy", "Adventure", "Horror" },
+                        PublishedDate = DateTime.Parse("2023-04-08"), Genres = "Drama, Comedy, Adventure, Horror",
                         IsOngoing = true, AuthorId = Guid.Parse("7275844C-6D85-41AE-9292-9F4C66197492")
                     },
 
@@ -47,7 +47,7 @@ namespace Services
                     {
                         BookId = Guid.Parse("1aab8de6-efd1-4281-8a7b-56eb7340d062"),
                         BookName = "Book C", BookRating = 5, Publisher = "Asura Scans",
-                        PublishedDate = DateTime.Parse("2023-04-09"), Genres = new List<string> { "Horror" },
+                        PublishedDate = DateTime.Parse("2023-04-09"), Genres = "Horror",
                         IsOngoing = false, AuthorId = Guid.Parse("976CD651-EA40-4138-A68A-9EFE92EB6337")
                     },
 
@@ -55,7 +55,7 @@ namespace Services
                     {
                         BookId = Guid.Parse("47c1d1e3-0fde-4b04-8ee6-219ca83e19cd"),
                         BookName = "Book D", BookRating = 5, Publisher = "Riot Games",
-                        PublishedDate = DateTime.Parse("2023-04-10"), Genres = new List<string> { "One Shot" },
+                        PublishedDate = DateTime.Parse("2023-04-10"), Genres = "One Shot",
                         IsOngoing = true, AuthorId = Guid.Parse("48B6490A-4DDB-4606-99E4-F97641FBDCC7")
                     },
 
@@ -63,7 +63,7 @@ namespace Services
                     {
                         BookId = Guid.Parse("1df9ec41-ff95-46e9-b1b8-b445f9cde561"),
                         BookName = "Book E", BookRating = 2, Publisher = "Bipo Translations",
-                        PublishedDate = DateTime.Parse("2023-04-11"), Genres = new List<string> { "Historical", "Fantasy" },
+                        PublishedDate = DateTime.Parse("2023-04-11"), Genres = "Historical, Fantasy",
                         IsOngoing = true, AuthorId = Guid.Parse("0E24B3F8-2167-43C7-8648-7442BA71E15A")
                     },
 
@@ -155,9 +155,9 @@ namespace Services
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.Publisher) ?
                     x.Publisher.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
                     break;
-                case nameof(BookResponse.Genres): // make serach for more than 1 genre
+                case nameof(BookResponse.Genress): // make serach for more than 1 genre
                     List<BookResponse> filtered = new();
-                    foreach (var book in allBooks) if (book.Genres.Contains(searchString)) filtered.Add(book);
+                    foreach (var book in allBooks) if (book.Genress.Contains(searchString)) filtered.Add(book);
                     matchingBooks = filtered;
                     break;
                 case nameof(BookResponse.PublishedDate):
