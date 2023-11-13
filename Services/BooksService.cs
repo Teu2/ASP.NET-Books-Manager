@@ -81,35 +81,28 @@ namespace Services
             List<BookResponse> allBooks = GetAllBooks();
             List<BookResponse> matchingBooks = allBooks;
             if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString)) return matchingBooks;
-
             
             switch (searchBy)
             {
                 case nameof(BookResponse.BookName):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.BookName)?
-                    x.BookName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
-                    break;
+                    x.BookName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
                 case nameof(BookResponse.Publisher):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.Publisher) ?
-                    x.Publisher.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
-                    break;
+                    x.Publisher.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
                 case nameof(BookResponse.Genress): // make serach for more than 1 genre
                     List<BookResponse> filtered = new();
                     foreach (var book in allBooks) if (book.Genress.Contains(searchString)) filtered.Add(book);
-                    matchingBooks = filtered;
-                    break;
+                    matchingBooks = filtered; break;
                 case nameof(BookResponse.PublishedDate):
                     matchingBooks = allBooks.Where(x => (x.PublishedDate != null) ?
-                    x.PublishedDate.Value.ToString("dd MMM yyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
-                    break;
+                    x.PublishedDate.Value.ToString("dd MMM yyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList(); break;
                 case nameof(BookResponse.IsOngoing):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.BookName) ?
-                    x.BookName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
-                    break;
+                    x.BookName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
                 case nameof(BookResponse.AuthorId):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.AuthorName) ?
-                    x.AuthorName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList();
-                    break;
+                    x.AuthorName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
                 default: matchingBooks = allBooks; break;
             }
 
