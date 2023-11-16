@@ -34,5 +34,11 @@ namespace Entities
             foreach (var author in authors) modelBuilder.Entity<Author>().HasData(author);
             foreach (var book in books) modelBuilder.Entity<Book>().HasData(book);
         }
+
+        public List<Book> sp_GetAllBooks()
+        {
+            // return Books.FromSqlRaw("SELECT BookId, BookName, BookRating, Publisher, PublishedDate, Genre, Genres, AuthorId, IsOngoing FROM [dbo].[Books]").ToList();
+            return Books.FromSqlRaw("EXECUTE [dbo].[GetAllBooks]").ToList();
+        }
     }
 }

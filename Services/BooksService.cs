@@ -63,7 +63,8 @@ namespace Services
 
         public List<BookResponse> GetAllBooks()
         {
-            return _dbContext.Books.ToList().Select(n => ConvertBookToBookResponse(n)).ToList(); // SELECT * from books
+            return _dbContext.sp_GetAllBooks().Select(x => ConvertBookToBookResponse(x)).ToList();
+            //return _dbContext.Books.ToList().Select(n => ConvertBookToBookResponse(n)).ToList(); // SELECT * from books
         }
 
         public BookResponse? GetBookById(Guid? bookId)

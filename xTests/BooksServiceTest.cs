@@ -11,6 +11,7 @@ using ServiceContracts.Enums;
 using Services;
 using Xunit.Abstractions;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace xTests
 {
@@ -22,8 +23,8 @@ namespace xTests
 
         public BooksServiceTest(ITestOutputHelper helper)
         {
-            _booksService = new BooksService();
-            _authorsService = new AuthorsService(false);
+            _authorsService = new AuthorsService(new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>().Options));
+            _booksService = new BooksService(new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>().Options), _authorsService);
             _helper = helper;
         }
 
@@ -334,7 +335,7 @@ namespace xTests
 
         #endregion
 
-        public List<BookAddRequest> ReusableAddBookMethod()
+        public List<BookAddRequest> ReusableAddBookMethod() // Legacy
         {
             AuthorAddRequest authorReq = new() { AuthorName = "Irene" };
             AuthorResponse authorRes = _authorsService.AddAuthor(authorReq);

@@ -8,6 +8,7 @@ using ServiceContracts.DTO;
 using Entities;
 using Services;
 using Xunit;
+using Microsoft.EntityFrameworkCore;
 
 namespace xTests
 {
@@ -18,7 +19,7 @@ namespace xTests
         public AuthorsServiceTest()
         {
             // create object of AuthorService
-            _authorsService = new AuthorsService(false);
+            _authorsService = new AuthorsService(new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>().Options));
         }
 
         #region AddAuthor
