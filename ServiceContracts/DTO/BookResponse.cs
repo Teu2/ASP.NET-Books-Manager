@@ -84,6 +84,7 @@ namespace ServiceContracts.DTO
 
         public static List<string> ConvertToListString(string Genres)
         {
+            Console.WriteLine($"Genres ===== {Genres}");
             // split string into an array using comma delimiter
             string[] genreArray = Genres.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 

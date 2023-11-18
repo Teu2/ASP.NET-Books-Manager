@@ -83,13 +83,14 @@
         @*Genres*@
         <div class="form-field flex">
             <div class="w-25">
-                <label asp-for="Genres" class="form-label pt">Genres</label>
+                @*[BookUpdateRequest] Genres*@
+                <label asp-for="GenresList" class="form-label pt">Genres</label>
             </div>
             <div class="flex-1">
                 @foreach (var genre in ViewBag.AvailableGenres)
                 {
                     <div class="add-check">
-                        <input type="checkbox" id="Genres" name="Genres" value="@genre"/>
+                        <input type="checkbox" id="GenresList" name="GenresList" value="@genre"/>
                         @genre
                     </div>
                 }

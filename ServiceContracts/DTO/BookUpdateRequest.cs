@@ -32,8 +32,10 @@ namespace ServiceContracts.DTO
         [Required(ErrorMessage = "Genre  must not be empty")]
         public GenreOptions Genre { get; set; }
 
-        [Required(ErrorMessage = "Genres must not be empty")]
         public string? Genres { get; set; }
+
+        [Required(ErrorMessage = "Genres must not be empty")]
+        public List<string>? GenresList { get; set; }
 
         public Guid AuthorId { get; set; }
 
@@ -51,7 +53,7 @@ namespace ServiceContracts.DTO
                 PublishedDate = PublishedDate,
 
                 Genre = Genre.ToString(),
-                Genres = Genres,
+                Genres = GenresList.ToString(),
 
                 AuthorId = AuthorId,
 
