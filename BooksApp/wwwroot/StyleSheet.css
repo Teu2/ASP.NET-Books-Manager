@@ -16,9 +16,26 @@
     min-width: 500px;
 }
 
+.flex-centre-items{
+    /*width: 80%;*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 7px;
+    position: relative;
+}
+
+.title{
+    color: black;
+    /*margin: 0.5em 0em;*/
+    margin-bottom: 0.5em;
+}
+
 .navbar {
     background-color: white;
-    padding: 10px;
+    padding: 0.9em;
     /*box-shadow: 0px 1px 2px 2px #cacaca;*/
     border-bottom: 1px solid #eaedf0;
     display: flex;
@@ -52,8 +69,10 @@
     transition: background-color 0.4s;
     display: inline-block;
     margin: 0px 3px;
-    color: #1383a4;
+    color: black;  /*li color*/
     text-decoration: none;
+    font-size: 15px;
+    /*font-weight: bold;*/
 }
 
 .navbar > ul > li > a:hover
@@ -92,21 +111,27 @@
     /*background-color: #bcd5c6;*/
     background-color: white;
     color: #000000;
-    border: 1px solid #f0f2f4;
+    border-bottom: 1px solid #f0f2f4;
     border-top-left-radius: 10px;
 }
 
 .table thead th
 {
-    padding: 5px 10px;
+    padding: 14px 10px;
     text-align: left;
-    font-size: 15px;
+    font-size: 11.5px;
+    color: #626262;
+}
+
+.table thead th a {
+    color: #626262;
 }
 
 .table tbody td
 {
     padding: 6px 10px;
-    font-size: 15px;
+    font-size: 14px;
+    padding: 17px 11px;
 }
 
 .table tbody .book-cover {
@@ -169,7 +194,7 @@ table tbody tr td .genres{
 
 .w-90
 {
-    width: 90%;
+    width: 98%;
 }
 
 .w-100
@@ -331,7 +356,7 @@ table tbody tr td .genres{
     margin-top: 1em;
     padding: 1em;
     border-radius: 6px;
-    border: 1px solid #f0f2f4;
+    /*border: 1px solid #f0f2f4;*/
     background-color: white;
     display: flex;
     gap: 20px;
@@ -386,7 +411,7 @@ table tbody tr td .genres{
 
 a:link, a:visited
 {
-    color: blue;
+    color: white;
 }
 
 a.link-hover:link
@@ -420,11 +445,20 @@ a.link-hover:hover
     cursor: pointer;
 }
 
-.button-blue-back
-{
-    background-color: #3a81bd;
+.button-blue-back {
+    background-color: black;
     color: #ffffff;
-    border: 2px solid #3f80ca;
+    /*border: 2px solid #3f80ca;*/
+    border: none;
+}
+
+.button-black-back {
+    background-color: black;
+    color: white;
+    border-radius: 50px;
+    border: none;
+    font-size: 13px;
+    padding: 8px 15px;
 }
 
 .button-blue-back a{
@@ -456,11 +490,11 @@ a.link-hover:hover
     background-color: #066627;
 }
 
-.button-red-back
-{
+.button-red-back {
     background-color: #cb511e;
     color: #ffffff;
-    border: 2px solid #e49776;
+    border: none;
+    /*border: 2px solid #e49776;*/
 }
 
 .button-red-back:hover
@@ -471,7 +505,7 @@ a.link-hover:hover
 
 .form-input {
     padding: 8px 10px;
-    font-size: 80%;
+    font-size: 75%;
     border-radius: 5px;
     border: 1px solid #eaedf0;
     width: 100%;

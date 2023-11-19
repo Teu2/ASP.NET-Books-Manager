@@ -12,7 +12,15 @@
         <div class="navbar">
             <div class="navbar-brand">BOOKS MANAGER.</div>
             <ul>
-                <li><a href="~/books/index">Books</a></li>
+                <li><a href="~/books/index"><i class="fa-solid fa-book"></i> BOOKS</a></li>
+                <li><a href="~/books/create">ADD BOOKS</a></li>
+                @*<button class="button button-blue-back" asp-controller="Books" asp-action="Create"><i class="fa-solid fa-book"></i> Add Book</button>*@
+                @*<button class="button button-blue-back" onclick="redirectToHome()">
+                    <i class="fa-solid fa-book"></i> Books
+                </button>
+                <button class="button button-blue-back" onclick="redirectToCreate()">
+                    Add Book
+                </button>*@
             </ul>
         </div>
 
@@ -22,4 +30,13 @@
     </div>
     @RenderSection("scripts", required: false);
 </body>
+<script>
+    function redirectToCreate() {
+        window.location.href = '@Url.Action("Create", "Books")';
+    }
+
+    function redirectToHome() {
+        window.location.href = '@Url.Action("Index", "Books")';
+    }
+</script>
 </html>

@@ -29,9 +29,11 @@ namespace ServiceContracts.DTO
 
         [Required(ErrorMessage = "Genre must not be empty")]
         public GenreOptions Genre { get; set; }
+        
+        public string? Genres { get; set; }
 
         [Required(ErrorMessage = "Genres must not be empty")]
-        public string? Genres { get; set; }
+        public List<string>? GenresList { get; set; }
 
         public Guid AuthorId { get; set; }
 
@@ -49,12 +51,25 @@ namespace ServiceContracts.DTO
                 PublishedDate = PublishedDate,
 
                 Genre = Genre.ToString(),
-                Genres = Genres,
+                Genres = GenresListToString(GenresList),
 
                 AuthorId = AuthorId,
 
                 IsOngoing = IsOngoing
             };
+
+            string GenresListToString(List<string> GenresList)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = 0; i < GenresList.Count; i++)
+                {
+                    sb.Append(GenresList[i]);
+                    if (i < GenresList.Count - 1) sb.Append(", ");
+                }
+
+                return sb.ToString();
+            }
         }
     }
 }

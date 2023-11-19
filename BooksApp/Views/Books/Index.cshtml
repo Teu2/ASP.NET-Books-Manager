@@ -4,119 +4,124 @@
 }
 
 <form asp-controller="Books" asp-action="Index" method="get">
-    <h1>BOOKS LIST</h1>
-    <button class="button button-blue-back" asp-controller="Books" asp-action="Create"><i class="fa-solid fa-book"></i> Add Book</button>
     
-    <div class="box w-100">
-        <div class="flex-1">
-            <select class="form-input" name="searchBy">
-                @foreach(var item in ViewBag.SearchFields)
-                {
-                    if(item.Key == ViewBag.SearchBy)
+    @*<button class="button button-blue-back" asp-controller="Books" asp-action="Create"><i class="fa-solid fa-book"></i> Add Book</button>*@
+    @*<h2 class="title">BOOKS</h2>*@
+    <div class="flex-centre-items">
+        
+        <div class="box w-100 mt">
+            @*<div class="flex-1"><h2>BOOKS</h2></div>*@
+            <div class="flex-1">
+                <select class="form-input" name="searchBy">
+                    @foreach(var item in ViewBag.SearchFields)
                     {
-                        <option value="@item.Key" selected="@ViewBag.SearchBy">@item.Value</option>
+                        if(item.Key == ViewBag.SearchBy)
+                        {
+                            <option value="@item.Key" selected="@ViewBag.SearchBy">@item.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
                     }
-                    else
-                    {
-                        <option value="@item.Key">@item.Value</option>
-                    }
-                }
-            </select>
+                </select>
+            </div>
+            <div class="flex-1">
+                <input type="search" id="search" class="form-input" placeholder="Search" name="searchString" value="@ViewBag.SearchString">
+            </div>
+            <div class="flex-1 s-g">
+                <button class="button button-black-back" asp-controller="Books" asp-action="Index"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+                <button class="button button-black-back"><a href="~/books/index"><i class="fa-solid fa-rotate-right"></i> Clear</a></button>
+            </div>
         </div>
-        <div class="flex-1">
-            <input type="search" id="search" class="form-input" placeholder="Search" name="searchString" value="@ViewBag.SearchString">
-        </div>
-        <div class="flex-1 s-g">
-            <button class="button button-blue-back" asp-controller="Books" asp-action="Index"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
-            <button class="button button-blue-back"><a href="~/books/index"><i class="fa-solid fa-rotate-right"></i> Clear</a></button>
-        </div>
-    </div>
-    <table class="table w-100 mt">
-        <thead>
-            <tr>
-                <th>COVER</th>
-                
-                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
-                {
-                    { "HeaderName", nameof(BookResponse.BookName) },
-                    { "DisplayName", "BOOKS NAME" }
-                })
-
-                <th>RATING</th>
-
-                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
-                {
-                    { "HeaderName", nameof(BookResponse.Publisher) },
-                    { "DisplayName", "PUBLISHER" }
-                })
-
-                <th>PUBLISHED</th>
-                <th>WRITTEN</th>
-                <th>GENRE(s)</th>
-                @*<th>AUTHOR</th>*@
-                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
-                {
-                    { "HeaderName", nameof(BookResponse.AuthorName) },
-                    { "DisplayName", "AUTHOR" }
-                })
-                @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
-                {
-                    { "HeaderName", nameof(BookResponse.IsOngoing) },
-                    { "DisplayName", "ONGOING" }
-                })
-                <th>OPTIONS</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach(var n in Model)
-            {
+        <table class="table w-90 mt">
+            <thead>
                 <tr>
-                    <td class="book-cover"><img src="~/cover1.jpg"/></td>
-                    <td>@n.BookName</td>
-                    <td>
-                        @for(int i = 0; i < n.BookRating; i++)
-                        {
-                            <i class="fa-solid fa-star fa-xs" style="color:#f9d932"></i>
-                        }                    
-                    </td>
-                    <td>@n.Publisher</td>
-                    <td>@n.PublishedDate?.ToString("dd MMM yyyy")</td>
-                    <td>@n.BookAge Year(s) ago</td>
-                    <td>
-                        <div class="genres">
-                            @if (n.Genress != null)
+                    @*<th>COVER</th>*@
+                
+                    @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                    {
+                        { "HeaderName", nameof(BookResponse.BookName) },
+                        { "DisplayName", "BOOKS NAME" }
+                    })
+
+                    <th>RATING</th>
+
+                    @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                    {
+                        { "HeaderName", nameof(BookResponse.Publisher) },
+                        { "DisplayName", "PUBLISHER" }
+                    })
+
+                    @*<th>PUBLISHED</th>*@
+                    @*<th>WRITTEN</th>*@
+                    <th>GENRE(s)</th>
+                    @*<th>AUTHOR</th>*@
+                    @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                    {
+                        { "HeaderName", nameof(BookResponse.AuthorName) },
+                        { "DisplayName", "AUTHOR" }
+                    })
+                    @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
+                    {
+                        { "HeaderName", nameof(BookResponse.IsOngoing) },
+                        { "DisplayName", "ONGOING" }
+                    })
+                    <th>OPTIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var n in Model)
+                {
+                    <tr>
+                        @*<td class="book-cover"><img src="~/cover1.jpg"/></td>*@
+                        <td>@n.BookName</td>
+                        <td>
+                            @for(int i = 0; i < n.BookRating; i++)
                             {
-                                @foreach (var genre in n.Genress)
+                                <i class="fa-solid fa-star fa-xs" style="color:#f9d932"></i>
+                            }                    
+                        </td>
+                        <td>@n.Publisher</td>
+                        @*<td>@n.PublishedDate?.ToString("dd MMM yyyy")</td>*@
+                        @*<td>@n.BookAge Year(s) ago</td>*@
+                        <td>
+                            <div class="genres">
+                                @if (n.Genress != null)
                                 {
-                                    <div class="genre-tag">@genre</div>
+                                    @foreach (var genre in n.Genress)
+                                    {
+                                        <div class="genre-tag">@genre</div>
+                                    }
                                 }
-                            }
-                        </div>
-                    </td>
-                    <td>@n.AuthorName</td>
-                    <td>
-                        @if (@n.IsOngoing.HasValue)
-                        {
-                            if (@n.IsOngoing.Value)
+                            </div>
+                        </td>
+                        <td>@n.AuthorName</td>
+                        <td>
+                            @if (@n.IsOngoing.HasValue)
                             {
-                                <span>Ongoing</span>
+                                if (@n.IsOngoing.Value)
+                                {
+                                    <span>Ongoing</span>
+                                }
+                                else
+                                {
+                                    <span>Completed</span>
+                                }
                             }
                             else
                             {
                                 <span>Completed</span>
                             }
-                        }
-                        else
-                        {
-                            <span>Completed</span>
-                        }
-                    </td>
-                    <td> @*Edit and Delete buttons for BooksController.cs & Edit IActionMethod *@
-                        <button class="button button-blue-back" asp-controller="Books" asp-action="Edit" asp-route-bookId="@n.BookId"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button class="button button-red-back" asp-controller="Books" asp-action="Delete" asp-route-bookId="@n.BookId"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                        </td>
+                        <td> @*Edit and Delete buttons for BooksController.cs & Edit IActionMethod *@
+                            <button class="button button-blue-back" asp-controller="Books" asp-action="Edit" asp-route-bookId="@n.BookId"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="button button-red-back" asp-controller="Books" asp-action="Delete" asp-route-bookId="@n.BookId"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
 </form>

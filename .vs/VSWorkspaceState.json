@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\BooksApp",
+    "\\BooksApp\\Views",
+    "\\BooksApp\\Views\\Books",
+    "\\ServiceContracts",
+    "\\ServiceContracts\\DTO"
+  ],
+  "SelectedNode": "\\BooksApp\\Views\\Books\\Index.cshtml",
+  "PreviewInSolutionExplorer": false
+}

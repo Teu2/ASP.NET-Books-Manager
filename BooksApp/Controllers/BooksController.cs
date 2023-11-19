@@ -48,7 +48,7 @@ namespace BooksApp.Controllers
             return View(sortedBooks); // Views/Books/Index.cshtml
         }
 
-        [Route("create")]
+        [Route("[action]")]
         [HttpGet] // Action method only accepts GET requets
         public IActionResult Create()
         {
