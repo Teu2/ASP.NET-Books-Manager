@@ -33,7 +33,7 @@ namespace Services
             return formattedDate;
         }
 
-        public BookResponse AddBook(BookAddRequest? bookAddRequest)
+        public async Task<BookResponse> AddBook(BookAddRequest? bookAddRequest)
         {
             // check if null & validation checks
             if (bookAddRequest == null) throw new ArgumentNullException(nameof(bookAddRequest));
@@ -47,38 +47,38 @@ namespace Services
             book.BookId = Guid.NewGuid();
 
             // Add book | not stored procedure
-            //_dbContext.Books.Add(book);
-            //_dbContext.SaveChanges();
+            _dbContext.Books.Add(book);
+            await _dbContext.SaveChangesAsync();
 
             // Add book | stored procedure
-            _dbContext.sp_AddBooks(book);
+            // _dbContext.sp_AddBooks(book);
 
             BookResponse bookRes = book.ToBookResponse();
 
             return bookRes; // return ConvertBookToBookResponse(book);
         }
 
-        public List<BookResponse> GetAllBooks()
+        public async Task<List<BookResponse>> GetAllBooks()
         {
-            var books = _dbContext.Books.Include("Author").ToList();
+            var books = await _dbContext.Books.Include("Author").ToListAsync();
             return books.Select(x => x.ToBookResponse()).ToList();
             //return _dbContext.sp_GetAllBooks().Select(x => ConvertBookToBookResponse(x)).ToList();
             //return _dbContext.Books.ToList().Select(n => ConvertBookToBookResponse(n)).ToList(); // SELECT * from books
         }
 
-        public BookResponse? GetBookById(Guid? bookId)
+        public async Task<BookResponse?> GetBookById(Guid? bookId)
         {
             if (bookId == null) return null;
 
-            Book? book = _dbContext.Books.Include("Author").FirstOrDefault(temp => temp.BookId == bookId);
+            Book? book = await _dbContext.Books.Include("Author").FirstOrDefaultAsync(temp => temp.BookId == bookId);
             if (book == null) return null;
             
             return book.ToBookResponse();
         }
 
-        public List<BookResponse> GetFilteredBooks(string searchBy, string? searchString)
+        public async Task<List<BookResponse>> GetFilteredBooks(string searchBy, string? searchString)
         {
-            List<BookResponse> allBooks = GetAllBooks();
+            List<BookResponse> allBooks = await GetAllBooks();
             List<BookResponse> matchingBooks = allBooks;
             if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString)) return matchingBooks;
             
@@ -109,7 +109,7 @@ namespace Services
             return matchingBooks;
         }
 
-        public List<BookResponse> GetSortedBooks(List<BookResponse> allBooks, string sortBy, SortOrderOptions sortOrder)
+        public async Task<List<BookResponse>> GetSortedBooks(List<BookResponse> allBooks, string sortBy, SortOrderOptions sortOrder)
         {
             if (string.IsNullOrEmpty(sortBy)) return allBooks;
 
@@ -149,13 +149,13 @@ namespace Services
             return sortedBooks;
         }
 
-        public BookResponse UpdateBook(BookUpdateRequest bookUpdateRequest)
+        public async Task<BookResponse> UpdateBook(BookUpdateRequest bookUpdateRequest)
         {
             if (bookUpdateRequest == null) throw new ArgumentNullException(nameof(Book));
 
             Services.Helpers.ValidationHelper.ValidateModels(bookUpdateRequest);
 
-            Book? book = _dbContext.Books.FirstOrDefault(x => x.BookId == bookUpdateRequest.BookId);
+            Book? book = await _dbContext.Books.FirstOrDefaultAsync(x => x.BookId == bookUpdateRequest.BookId);
             if (book == null) throw new ArgumentException("Given book doesn't exist");
 
             // update matching returned book with bookUpdateRequest details | Entitystate.modified
@@ -168,7 +168,7 @@ namespace Services
             book.Genres = GenresListToString(bookUpdateRequest.GenresList);
             book.IsOngoing = bookUpdateRequest.IsOngoing;
 
-            _dbContext.SaveChanges(); // save changes
+            await _dbContext.SaveChangesAsync(); // save changes
 
             return book.ToBookResponse();
         }
@@ -186,15 +186,15 @@ namespace Services
             return sb.ToString();
         }
 
-        public bool DeleteBook(Guid? bookId)
+        public async Task<bool> DeleteBook(Guid? bookId)
         {
             if (bookId == null) throw new ArgumentNullException(nameof(bookId));
 
-            Book? book = _dbContext.Books.FirstOrDefault(x => x.BookId == bookId); // check if book is valid
+            Book? book = await _dbContext.Books.FirstOrDefaultAsync(x => x.BookId == bookId); // check if book is valid
             if (book == null) return false;
 
             _dbContext.Books.Remove(_dbContext.Books.First(c => c.BookId == bookId));
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return true;
         }

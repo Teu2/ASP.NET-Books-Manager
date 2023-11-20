@@ -14,24 +14,18 @@ namespace ServiceContracts
     /// </summary>
     public interface IBooksService
     {
-        BookResponse AddBook(BookAddRequest? bookAddRequest); // add book into list of books
+        Task<BookResponse> AddBook(BookAddRequest? bookAddRequest); // add book into list of books
 
-        List<BookResponse> GetAllBooks(); // retrieves all books
+        Task<List<BookResponse>> GetAllBooks(); // retrieves all books
 
-        BookResponse? GetBookById(Guid? bookId);
+        Task<BookResponse?> GetBookById(Guid? bookId);
 
-        /// <summary>
-        /// Returns a list of books by filter
-        /// </summary>
-        /// <param name="searchBy">property to search</param>
-        /// <param name="searchString">actual value to search</param>
-        /// <returns></returns>
-        List<BookResponse> GetFilteredBooks(string searchBy, string? searchString);
+        Task<List<BookResponse>> GetFilteredBooks(string searchBy, string? searchString);
 
-        List<BookResponse> GetSortedBooks(List<BookResponse> allBooks, string sortBy, SortOrderOptions sortOrder);
+        Task<List<BookResponse>> GetSortedBooks(List<BookResponse> allBooks, string sortBy, SortOrderOptions sortOrder);
 
-        BookResponse UpdateBook(BookUpdateRequest bookUpdateRequest);
+        Task<BookResponse> UpdateBook(BookUpdateRequest bookUpdateRequest);
 
-        public bool DeleteBook(Guid? bookId);
+        public Task<bool> DeleteBook(Guid? bookId);
     }
 }

@@ -22,7 +22,7 @@ namespace BooksApp.Controllers
 
         [Route("/")]
         [Route("[action]")] // --> books/index (book prefix) | [action] refers to whatever name we give the IActionResult E.g [action] == 'index'
-        public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(BookResponse.BookName), SortOrderOptions sortOrder = SortOrderOptions.Asc)
+        public async Task<IActionResult> Index(string searchBy, string? searchString, string sortBy = nameof(BookResponse.BookName), SortOrderOptions sortOrder = SortOrderOptions.Asc)
         {
 
             ViewBag.SearchFields = new Dictionary<string, string>()
@@ -36,23 +36,23 @@ namespace BooksApp.Controllers
                 { nameof(BookResponse.AuthorId), "Author"},
             };
 
-            List<BookResponse> books = _booksService.GetFilteredBooks(searchBy, searchString);
+            List<BookResponse> books = await _booksService.GetFilteredBooks(searchBy, searchString);
             ViewBag.SearchString = searchString;
             ViewBag.SearchBy = searchBy;
 
-            List<BookResponse> sortedBooks = _booksService.GetSortedBooks(books, sortBy, sortOrder);
+            List<BookResponse> sortedBooks = await _booksService.GetSortedBooks(books, sortBy, sortOrder);
             ViewBag.SortBy = sortBy;
             ViewBag.SortOrder = sortOrder.ToString();
 
-            List<BookResponse> returnedBooks = _booksService.GetAllBooks();
+            List<BookResponse> returnedBooks = await _booksService.GetAllBooks();
             return View(sortedBooks); // Views/Books/Index.cshtml
         }
 
         [Route("[action]")]
         [HttpGet] // Action method only accepts GET requets
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            List<AuthorResponse> authorRes = _authorsService.GetAllAuthors();
+            List<AuthorResponse> authorRes = await _authorsService.GetAllAuthors();
             List<string> availableGenres = GetGenres();
 
             ViewBag.AvailableGenres = availableGenres;
@@ -65,11 +65,11 @@ namespace BooksApp.Controllers
 
         [Route("[action]")]
         [HttpPost] // Action method only accepts POST requets
-        public IActionResult Create(BookAddRequest book)
+        public async Task<IActionResult> Create(BookAddRequest book)
         {
             if (!ModelState.IsValid)
             {
-                List<AuthorResponse> authorRes = _authorsService.GetAllAuthors();
+                List<AuthorResponse> authorRes = await _authorsService.GetAllAuthors();
                 List<string> availableGenres = GetGenres();
 
                 ViewBag.AvailableGenres = availableGenres;
@@ -82,16 +82,16 @@ namespace BooksApp.Controllers
             }
 
             book.IsOngoing = (book.IsOngoing == null) ? false : true;
-            BookResponse bookRes = _booksService.AddBook(book);
+            BookResponse bookRes = await _booksService.AddBook(book);
             
             return RedirectToAction("Index", "Books");
         }
 
         [HttpGet] // loading create view
         [Route("[action]/{bookId}")]
-        public IActionResult Edit(Guid? bookId) // Edit.cshtml
+        public async Task<IActionResult> Edit(Guid? bookId) // Edit.cshtml
         {
-            List<AuthorResponse> authorRes = _authorsService.GetAllAuthors();
+            List<AuthorResponse> authorRes = await _authorsService.GetAllAuthors();
             List<string> availableGenres = GetGenres();
 
             ViewBag.AvailableGenres = availableGenres;
@@ -99,7 +99,7 @@ namespace BooksApp.Controllers
                 new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
             ).ToList(); // Convert the IEnumerable to List<SelectListItem>
 
-            BookResponse? bookRes = _booksService.GetBookById(bookId);
+            BookResponse? bookRes = await _booksService.GetBookById(bookId);
             if (bookRes == null) return RedirectToAction("Index"); // if no valid book response return to index.cshtml
 
             BookUpdateRequest bookUpdateReq = bookRes.ToBookUpdateRequest();
@@ -109,19 +109,19 @@ namespace BooksApp.Controllers
 
         [HttpPost] // handling submit for post - edit.cshtml
         [Route("[action]/{bookId}")]
-        public IActionResult Edit(BookUpdateRequest bookUpdateReq, Guid bookId) // Edit.cshtml
+        public async Task<IActionResult> Edit(BookUpdateRequest bookUpdateReq, Guid bookId) // Edit.cshtml
         {
-            BookResponse? bookRes = _booksService.GetBookById(bookUpdateReq.BookId);
+            BookResponse? bookRes = await _booksService.GetBookById(bookUpdateReq.BookId);
             if (bookRes == null) return RedirectToAction("Index");
 
             if (ModelState.IsValid)
             {
-                BookResponse bookUpdated = _booksService.UpdateBook(bookUpdateReq);
+                BookResponse bookUpdated = await _booksService.UpdateBook(bookUpdateReq);
                 return RedirectToAction("Index");
             }
             else
             {
-                List<AuthorResponse> authorRes = _authorsService.GetAllAuthors();
+                List<AuthorResponse> authorRes = await _authorsService.GetAllAuthors();
                 List<string> availableGenres = GetGenres();
 
                 ViewBag.AvailableGenres = availableGenres;
@@ -160,9 +160,9 @@ namespace BooksApp.Controllers
 
         [HttpGet]
         [Route("[action]/{bookId}")]
-        public IActionResult Delete(Guid? bookId)
+        public async Task<IActionResult> Delete(Guid? bookId)
         {
-            BookResponse? booksRes = _booksService.GetBookById(bookId);
+            BookResponse? booksRes = await _booksService.GetBookById(bookId);
             if (booksRes == null) return RedirectToAction("index"); // issue when pressing edit or delete is here | bookRes is null
 
             return View(booksRes);
@@ -170,12 +170,12 @@ namespace BooksApp.Controllers
 
         [HttpPost]
         [Route("[action]/{bookId}")]
-        public IActionResult Delete(BookUpdateRequest bookUpdateReq)
+        public async Task<IActionResult> Delete(BookUpdateRequest bookUpdateReq)
         {
-            BookResponse? bookRes = _booksService.GetBookById(bookUpdateReq.BookId);
+            BookResponse? bookRes = await _booksService.GetBookById(bookUpdateReq.BookId);
             if (bookRes == null) return RedirectToAction("index");
 
-            _booksService.DeleteBook(bookUpdateReq.BookId);
+            await _booksService.DeleteBook(bookUpdateReq.BookId);
 
             return RedirectToAction("index");
         }
