@@ -81,6 +81,7 @@ namespace BooksApp.Controllers
                 return View();
             }
 
+            book.IsOngoing = (book.IsOngoing == null) ? false : true;
             BookResponse bookRes = _booksService.AddBook(book);
             
             return RedirectToAction("Index", "Books");

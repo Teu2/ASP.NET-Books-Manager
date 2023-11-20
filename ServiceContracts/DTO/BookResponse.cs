@@ -78,7 +78,8 @@ namespace ServiceContracts.DTO
                 Genress = ConvertToListString(book.Genres),
                 AuthorId = (Guid)book.AuthorId,
                 IsOngoing = book.IsOngoing,
-                BookAge = GetBookAge(book)
+                BookAge = GetBookAge(book),
+                AuthorName = book.Author?.AuthorName
             };
         }
 

@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace Entities
 {
     public class BooksDbContext : DbContext
     {
-        public BooksDbContext(DbContextOptions options) : base (options)
-        {
-
-        }
+        public BooksDbContext(DbContextOptions options) : base (options){ } // Constructor
 
         public DbSet<Author>? Authors { get; set; }
         public DbSet<Book>? Books { get; set; }
@@ -39,6 +37,24 @@ namespace Entities
         {
             // return Books.FromSqlRaw("SELECT BookId, BookName, BookRating, Publisher, PublishedDate, Genre, Genres, AuthorId, IsOngoing FROM [dbo].[Books]").ToList();
             return Books.FromSqlRaw("EXECUTE [dbo].[GetAllBooks]").ToList();
+        }
+
+        public int sp_AddBooks(Book book)
+        {
+            SqlParameter[] param = new SqlParameter[]
+            {
+                new SqlParameter("@BookId", book.BookId),
+                new SqlParameter("@BookRating", book.BookRating),
+                new SqlParameter("@BookName", book.BookName),
+                new SqlParameter("@Publisher", book.Publisher),
+                new SqlParameter("@PublishedDate", book.PublishedDate),
+                new SqlParameter("@Genre", book.Genre),
+                new SqlParameter("@Genres", book.Genres),
+                new SqlParameter("@AuthorId", book.AuthorId),
+                new SqlParameter("@IsOngoing", book.IsOngoing)
+            };
+
+            return Database.ExecuteSqlRaw("EXECUTE [dbo].[AddBooks] @BookId, @BookRating, @BookName, @Publisher, @PublishedDate, @Genre, @Genres, @AuthorId, @IsOngoing", param);
         }
     }
 }

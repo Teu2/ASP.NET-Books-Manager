@@ -9,6 +9,7 @@ using ServiceContracts;
 using System.ComponentModel.DataAnnotations;
 using Services.Helpers;
 using ServiceContracts.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -32,13 +33,6 @@ namespace Services
             return formattedDate;
         }
 
-        private BookResponse ConvertBookToBookResponse(Book book)
-        {
-            BookResponse bookRes = book.ToBookResponse();
-            bookRes.AuthorName = _authorsService.GetAuthorById(book.AuthorId)?.AuthorName; // <-- Here 
-            return bookRes;
-        }
-
         public BookResponse AddBook(BookAddRequest? bookAddRequest)
         {
             // check if null & validation checks
@@ -50,20 +44,25 @@ namespace Services
 
             // Return - convert to book, generate an Id, add new book to list of books and return book as book response
             Book book = bookAddRequest.ToBook();
-            book.BookId = new Guid();
+            book.BookId = Guid.NewGuid();
 
-            // Add book
-            _dbContext.Books.Add(book);
-            _dbContext.SaveChanges();
+            // Add book | not stored procedure
+            //_dbContext.Books.Add(book);
+            //_dbContext.SaveChanges();
 
-            BookResponse bookRes = ConvertBookToBookResponse(book);
+            // Add book | stored procedure
+            _dbContext.sp_AddBooks(book);
+
+            BookResponse bookRes = book.ToBookResponse();
 
             return bookRes; // return ConvertBookToBookResponse(book);
         }
 
         public List<BookResponse> GetAllBooks()
         {
-            return _dbContext.sp_GetAllBooks().Select(x => ConvertBookToBookResponse(x)).ToList();
+            var books = _dbContext.Books.Include("Author").ToList();
+            return books.Select(x => x.ToBookResponse()).ToList();
+            //return _dbContext.sp_GetAllBooks().Select(x => ConvertBookToBookResponse(x)).ToList();
             //return _dbContext.Books.ToList().Select(n => ConvertBookToBookResponse(n)).ToList(); // SELECT * from books
         }
 
@@ -71,10 +70,10 @@ namespace Services
         {
             if (bookId == null) return null;
 
-            Book? book = _dbContext.Books.FirstOrDefault(temp => temp.BookId == bookId);
+            Book? book = _dbContext.Books.Include("Author").FirstOrDefault(temp => temp.BookId == bookId);
             if (book == null) return null;
-
-            return ConvertBookToBookResponse(book);
+            
+            return book.ToBookResponse();
         }
 
         public List<BookResponse> GetFilteredBooks(string searchBy, string? searchString)
@@ -171,7 +170,7 @@ namespace Services
 
             _dbContext.SaveChanges(); // save changes
 
-            return ConvertBookToBookResponse(book);
+            return book.ToBookResponse();
         }
 
         public string GenresListToString(List<string> GenresList)

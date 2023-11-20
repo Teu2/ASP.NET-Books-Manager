@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Entities
     public class Book
     {
         [Key]
-        public Guid BookId { get; set; } // ISBN International Standard Book Number
+        public Guid BookId { get; set; } // ISBN International Standard Book Number (not actual ISBN)
         
         public int? BookRating { get; set; }
         
@@ -32,5 +33,8 @@ namespace Entities
         public Guid? AuthorId { get; set; }
         
         public bool? IsOngoing { get; set; }
+
+        [ForeignKey("AuthorId")]
+        public virtual Author? Author { get; set; }
     }
 }

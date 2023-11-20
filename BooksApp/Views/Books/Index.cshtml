@@ -9,7 +9,8 @@
     <h3 class="title">BOOKS LIST</h3>
     <div class="flex-centre-items">
         <div class="box w-100 mt">
-            @*<div class="flex-1"><h2>BOOKS</h2></div>*@
+
+            @*searching*@
             <div class="flex-1">
                 <select class="form-input" name="searchBy">
                     @foreach(var item in ViewBag.SearchFields)
@@ -33,6 +34,8 @@
                 <button class="button button-black-back"><a href="~/books/index"><i class="fa-solid fa-rotate-right"></i> Clear</a></button>
             </div>
         </div>
+
+        @*table to display results*@
         <table class="table w-90 mt">
             <thead>
                 <tr>
@@ -113,7 +116,8 @@
                                 <span>Completed</span>
                             }
                         </td>
-                        <td> @*Edit and Delete buttons for BooksController.cs & Edit IActionMethod *@
+                        <td> 
+                            @*Edit and Delete buttons for BooksController.cs & Edit IActionMethod *@
                             <button class="button button-blue-back" asp-controller="Books" asp-action="Edit" asp-route-bookId="@n.BookId"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button class="button button-red-back" asp-controller="Books" asp-action="Delete" asp-route-bookId="@n.BookId"><i class="fa-solid fa-trash"></i></button>
                         </td>
