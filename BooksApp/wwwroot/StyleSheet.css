@@ -16,31 +16,41 @@
     min-width: 500px;
 }
 
-.flex-centre-items{
-    /*width: 80%;*/
+.flex-centre-items {
+    width: 85%;
+
+    /* temporary positioning */
+    margin-left: 7em;
+    margin-top: 2em;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: white;
-    border-radius: 7px;
+    border-radius: 9px;
     position: relative;
+    /*box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;*/
 }
 
 .title{
     color: black;
     /*margin: 0.5em 0em;*/
     margin-bottom: 0.5em;
+    margin-top: 0.8em;
+    margin-left: 5.9em;
 }
 
 .navbar {
     background-color: white;
-    padding: 0.9em;
+    padding: 1em;
     /*box-shadow: 0px 1px 2px 2px #cacaca;*/
     border-bottom: 1px solid #eaedf0;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    /*box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;*/
+    /*box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;*/
 }
 
 .navbar-brand
@@ -48,6 +58,11 @@
     margin: 0px 30px 5px 5px;
     font-size: 1.1em;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: black;
+    color: white;
+    padding:0.4em;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 .navbar > ul
