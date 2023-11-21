@@ -543,11 +543,24 @@ a{
     text-decoration: none;
 }
 
+.downloadables {
+    /*background-color: red;*/
+    display: flex;
+    justify-content: left;
+    width: 100%;
+    padding: 1em;
+}
+
+.downloadables .downloads {
+    /*background-color: blue;*/
+    align-items: center;
+    width: fit-content;
+    display: flex;
+    gap: 0.4em;
+}
 
 
-
-@media screen and (min-width: 1000px)
-{
+@media screen and (min-width: 1000px) {
     .navbar-brand
     {
         display: inline-block;

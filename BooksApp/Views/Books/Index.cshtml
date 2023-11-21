@@ -9,7 +9,6 @@
     <h3 class="title">BOOKS LIST</h3>
     <div class="flex-centre-items">
         <div class="box w-100 mt">
-
             @*searching*@
             <div class="flex-1">
                 <select class="form-input" name="searchBy">
@@ -35,6 +34,15 @@
             </div>
         </div>
 
+        @*downloads*@
+        <div class="downloadables">
+            <div class="downloads">
+                <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF"><i class="fa-regular fa-file-pdf"></i> PDF</button>
+                <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF"><i class="fa-solid fa-file-csv"></i> CSV</button>
+                <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF"><i class="fa-regular fa-file-excel"></i> Excel</button>
+            </div>
+        </div>
+        
         @*table to display results*@
         <table class="table w-90 mt">
             <thead>
@@ -125,7 +133,5 @@
                 }
             </tbody>
         </table>
-        <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF">Download PDF</button>
     </div>
-    
 </form>
