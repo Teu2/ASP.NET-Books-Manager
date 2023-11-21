@@ -86,3 +86,5 @@ D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\System.CodeDom.dll
 D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\System.Text.Encodings.Web.dll
 D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\System.Text.Json.dll
 D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
+D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\Rotativa.AspNetCore.dll
+D:\Comp Sci\Programming\C#\BooksApp\BooksApp\obj\Debug\net6.0\BooksApp.MvcApplicationPartsAssemblyInfo.cs

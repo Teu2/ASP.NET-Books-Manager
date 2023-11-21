@@ -67,7 +67,7 @@
                     @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
                     {
                         { "HeaderName", nameof(BookResponse.IsOngoing) },
-                        { "DisplayName", "ONGOING" }
+                        { "DisplayName", "STATUS" }
                     })
                     <th>OPTIONS</th>
                 </tr>
@@ -125,6 +125,7 @@
                 }
             </tbody>
         </table>
+        <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF">Download PDF</button>
     </div>
     
 </form>

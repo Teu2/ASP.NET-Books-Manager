@@ -1,0 +1,68 @@
+﻿@model IEnumerable<BookResponse>
+@{
+    Layout = null; // overwrite setting of _ViewStart.cshtml
+}
+
+@*<link href="@("http://" + Context.Request.Host.ToString() + "StyleSheet.css")" rel="stylesheet"/>*@
+<link href="~/StyleSheet.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<h3 class="title">BOOKS LIST</h3>
+<div class="flex-centre-items">
+    @*table to display results*@
+    <table class="table w-90 mt">
+        <thead>
+            <tr>
+                <th>BOOKS NAME</th>
+                <th>RATING</th>
+                <th>PUBLISHER</th>
+                <th>GENRE(s)</th>
+                <th>AUHTOR</th>
+                <th>STATUS</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var n in Model)
+            {
+                <tr>
+                    <td>@n.BookName</td>
+                    <td>
+                        @for(int i = 0; i < n.BookRating; i++)
+                        {
+                            <i class="fa-solid fa-star fa-xs" style="color:#f9d932"></i>
+                        }                    
+                    </td>
+                    <td>@n.Publisher</td>
+                    <td>
+                        <div class="genres">
+                            @if (n.Genress != null)
+                            {
+                                @foreach (var genre in n.Genress)
+                                {
+                                    <div class="genre-tag">@genre</div>
+                                }
+                            }
+                        </div>
+                    </td>
+                    <td>@n.AuthorName</td>
+                    <td>
+                        @if (@n.IsOngoing.HasValue)
+                        {
+                            if (@n.IsOngoing.Value)
+                            {
+                                <span>Ongoing</span>
+                            }
+                            else
+                            {
+                                <span>Completed</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Completed</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

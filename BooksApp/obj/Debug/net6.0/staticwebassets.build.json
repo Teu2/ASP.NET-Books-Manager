@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "D86vkTWUek+iO3imCBlO6DMBoNdW1k3xwwjHqQjJhdI=",
+  "Hash": "XONsUylsBSpJsUlFu4DjtZ3w5+0pVF+NKRjhCpC831U=",
   "Source": "BooksApp",
   "BasePath": "_content/BooksApp",
   "Mode": "Default",
@@ -49,6 +49,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\jquery.min.js"
+    },
+    {
+      "Identity": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\Rotativa\\wkhtmltopdf.exe",
+      "SourceId": "BooksApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\",
+      "BasePath": "_content/BooksApp",
+      "RelativePath": "Rotativa/wkhtmltopdf.exe",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Rotativa\\wkhtmltopdf.exe"
     },
     {
       "Identity": "D:\\Comp Sci\\Programming\\C#\\BooksApp\\BooksApp\\wwwroot\\StyleSheet.css",
