@@ -10,6 +10,10 @@ using System.ComponentModel.DataAnnotations;
 using Services.Helpers;
 using ServiceContracts.Enums;
 using Microsoft.EntityFrameworkCore;
+using CsvHelper;
+using System.Globalization;
+using System.IO;
+using OfficeOpenXml;
 
 namespace Services
 {
@@ -90,10 +94,14 @@ namespace Services
                 case nameof(BookResponse.Publisher):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.Publisher) ?
                     x.Publisher.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
-                case nameof(BookResponse.Genress): // make serach for more than 1 genre
+                case nameof(BookResponse.Genress): // make search for more than 1 genre
                     List<BookResponse> filtered = new();
-                    foreach (var book in allBooks) if (book.Genress.Contains(searchString)) filtered.Add(book);
-                    matchingBooks = filtered; break;
+                    foreach (var book in allBooks)
+                    {
+                        foreach(var genre in book.Genress) if(genre.Contains(searchString)) filtered.Add(book);
+                    }
+                    matchingBooks = filtered; 
+                    break;
                 case nameof(BookResponse.PublishedDate):
                     matchingBooks = allBooks.Where(x => (x.PublishedDate != null) ?
                     x.PublishedDate.Value.ToString("dd MMM yyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList(); break;
@@ -173,7 +181,7 @@ namespace Services
             return book.ToBookResponse();
         }
 
-        public string GenresListToString(List<string> GenresList)
+        public string GenresListToString(List<string> GenresList) // convert genres list to string format
         {
             StringBuilder sb = new StringBuilder();
 
@@ -197,6 +205,83 @@ namespace Services
             await _dbContext.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<MemoryStream> GetBooksCSV() // generates a csv file for the table data
+        {
+            MemoryStream memoryStream = new MemoryStream();
+
+            using (StreamWriter streamWriter = new StreamWriter(memoryStream))
+            {
+                CsvWriter csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture, leaveOpen: true);
+
+                csvWriter.WriteHeader<BookResponse>(); //PersonID,PersonName,...
+                csvWriter.NextRecord();
+
+                List<BookResponse> persons = _dbContext.Books
+                    .Include("Author")
+                    .Select(temp => temp.ToBookResponse()).ToList();
+
+                persons.AddRange(persons);
+
+                await csvWriter.WriteRecordsAsync(persons);
+
+                // Make sure to flush the writer
+                await streamWriter.FlushAsync();
+            }
+
+            // Create a new MemoryStream and copy the data from the original stream
+            MemoryStream newMemoryStream = new MemoryStream(memoryStream.ToArray());
+            newMemoryStream.Position = 0;
+            return newMemoryStream;
+        }
+
+        public async Task<MemoryStream> GetBooksExcel()
+        {
+            MemoryStream memoryStream = new();
+            using (ExcelPackage excelPackage = new(memoryStream))
+            {
+                ExcelWorksheet workSheet = excelPackage.Workbook.Worksheets.Add("PersonsSheet");
+                workSheet.Cells["A1"].Value = "Book Id";
+                workSheet.Cells["B1"].Value = "Book Name";
+                workSheet.Cells["C1"].Value = "Book Rating";
+                workSheet.Cells["D1"].Value = "Publisher";
+                workSheet.Cells["E1"].Value = "Published Date";
+                workSheet.Cells["F1"].Value = "Genre";
+                workSheet.Cells["G1"].Value = "Author Id";
+                workSheet.Cells["H1"].Value = "Author Name";
+                workSheet.Cells["I1"].Value = "Status";
+
+                using (ExcelRange headerCells = workSheet.Cells["A1:I1"])
+                {
+                    headerCells.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    headerCells.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                    headerCells.Style.Font.Bold = true;
+                }
+
+                int row = 2;
+                List<BookResponse> books = _dbContext.Books.Include("Author").Select(temp => temp.ToBookResponse()).ToList();
+                foreach (BookResponse book in books)
+                {
+                    workSheet.Cells[row, 1].Value = book.BookId;
+                    workSheet.Cells[row, 2].Value = book.BookName;
+                    workSheet.Cells[row, 3].Value = book.BookRating;
+                    workSheet.Cells[row, 4].Value = book.Publisher;
+                    workSheet.Cells[row, 5].Value = book.PublishedDate.HasValue ? book.PublishedDate.Value.ToString("yyy-MM-dd") : "";
+                    workSheet.Cells[row, 6].Value = GenresListToString(book.Genress);
+                    workSheet.Cells[row, 7].Value = book.AuthorId;
+                    workSheet.Cells[row, 8].Value = book.AuthorName;
+                    workSheet.Cells[row, 9].Value = book.IsOngoing.HasValue ? "Ongoing" : "Completed";
+
+                    row += 1;
+                }
+
+                workSheet.Cells[$"A1:I{row}"].AutoFitColumns();
+                await excelPackage.SaveAsync();
+            }
+
+            memoryStream.Position = 0;
+            return memoryStream;
         }
     }
 }

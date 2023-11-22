@@ -27,5 +27,9 @@ namespace ServiceContracts
         Task<BookResponse> UpdateBook(BookUpdateRequest bookUpdateRequest);
 
         public Task<bool> DeleteBook(Guid? bookId);
+
+        Task<MemoryStream> GetBooksCSV();
+
+        Task<MemoryStream> GetBooksExcel(); // returns memory stream with excel data
     }
 }

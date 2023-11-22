@@ -557,6 +557,7 @@ a{
     width: fit-content;
     display: flex;
     gap: 0.4em;
+    /*font-size: 17px;*/
 }
 
 

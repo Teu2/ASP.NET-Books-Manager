@@ -12,6 +12,7 @@
     <table class="table w-90 mt">
         <thead>
             <tr>
+                <th>PUBLISHED </th>
                 <th>BOOKS NAME</th>
                 <th>RATING</th>
                 <th>PUBLISHER</th>
@@ -24,6 +25,7 @@
             @foreach(var n in Model)
             {
                 <tr>
+                    <td>@n.PublishedDate?.ToString("dd MMM yyyy")</td>
                     <td>@n.BookName</td>
                     <td>
                         @for(int i = 0; i < n.BookRating; i++)

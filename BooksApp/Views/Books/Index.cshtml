@@ -38,8 +38,8 @@
         <div class="downloadables">
             <div class="downloads">
                 <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF"><i class="fa-regular fa-file-pdf"></i> PDF</button>
-                <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF"><i class="fa-solid fa-file-csv"></i> CSV</button>
-                <button class="button button-blue-back" asp-controller="Books" asp-action="BooksPDF"><i class="fa-regular fa-file-excel"></i> Excel</button>
+                <button class="button button-blue-back" asp-controller="Books" asp-action="BooksCSV"><i class="fa-solid fa-file-csv"></i> CSV</button>
+                <button class="button button-blue-back" asp-controller="Books" asp-action="BooksExcel"><i class="fa-regular fa-file-excel"></i> Excel</button>
             </div>
         </div>
         
@@ -48,7 +48,7 @@
             <thead>
                 <tr>
                     @*<th>COVER</th>*@
-                
+                    <th>PUBLISHED</th>
                     @await Html.PartialAsync("_TableColumnHeader", new ViewDataDictionary(ViewData)
                     {
                         { "HeaderName", nameof(BookResponse.BookName) },
@@ -63,7 +63,7 @@
                         { "DisplayName", "PUBLISHER" }
                     })
 
-                    @*<th>PUBLISHED</th>*@
+                    
                     @*<th>WRITTEN</th>*@
                     <th>GENRE(s)</th>
                     @*<th>AUTHOR</th>*@
@@ -85,6 +85,7 @@
                 {
                     <tr>
                         @*<td class="book-cover"><img src="~/cover1.jpg"/></td>*@
+                        <td>@n.PublishedDate?.ToString("dd MMM yyyy")</td>
                         <td>@n.BookName</td>
                         <td>
                             @for(int i = 0; i < n.BookRating; i++)
@@ -93,7 +94,7 @@
                             }                    
                         </td>
                         <td>@n.Publisher</td>
-                        @*<td>@n.PublishedDate?.ToString("dd MMM yyyy")</td>*@
+                        
                         @*<td>@n.BookAge Year(s) ago</td>*@
                         <td>
                             <div class="genres">

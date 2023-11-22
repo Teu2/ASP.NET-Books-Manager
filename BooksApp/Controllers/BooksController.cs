@@ -5,6 +5,7 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
+using System.IO;
 
 namespace BooksApp.Controllers
 {
@@ -195,6 +196,20 @@ namespace BooksApp.Controllers
             await _booksService.DeleteBook(bookUpdateReq.BookId);
 
             return RedirectToAction("index");
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> BooksCSV()
+        {
+            MemoryStream memStream = await _booksService.GetBooksCSV();
+            return File(memStream, "application/octet-stream", "Books.csv");
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> BooksExcel()
+        {
+            MemoryStream memStream = await _booksService.GetBooksExcel();
+            return File(memStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "books.xlsx");
         }
     }
 }
