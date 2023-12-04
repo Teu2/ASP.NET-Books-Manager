@@ -12,19 +12,35 @@ using Services;
 using Xunit.Abstractions;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using EntityFrameworkCoreMock;
+using AutoFixture;
 
 namespace xTests
 {
+    // fix tests - convert to async task and use await
     public class BooksServiceTest
     {
         private readonly IBooksService _booksService;
         private readonly IAuthorsService _authorsService;
         private readonly ITestOutputHelper _helper;
+        private readonly IFixture _fixture;
 
         public BooksServiceTest(ITestOutputHelper helper)
         {
-            _authorsService = new AuthorsService(new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>().Options));
-            _booksService = new BooksService(new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>().Options), _authorsService);
+            // AutoFixture for dummy objects
+            _fixture = new Fixture();
+
+            List<Author>? authorsInitialData = new();
+            List<Book>? booksInitialData = new();
+            DbContextMock<ApplicationDbContext> dbContextMock = new(new DbContextOptionsBuilder<ApplicationDbContext>().Options); ;
+
+            ApplicationDbContext dbContext = dbContextMock.Object;
+            dbContextMock.CreateDbSetMock(temp => temp.Authors, authorsInitialData);
+            dbContextMock.CreateDbSetMock(temp => temp.Books, booksInitialData);
+
+            // create object of AuthorService
+            _authorsService = new AuthorsService(dbContext);
+            _booksService = new BooksService(dbContext, _authorsService);
             _helper = helper;
         }
 
@@ -32,68 +48,52 @@ namespace xTests
         // Tests for AddBook() method
 
         [Fact] // Throw null exception if argument is null value
-        public void AddBook_NullBook() 
+        public async Task AddBook_NullBook() 
         {
             // Arrange
             BookAddRequest? req = null;
 
             // Act
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                _booksService.AddBook(req);
+                await _booksService.AddBook(req);
             });
         }
 
         [Fact] // Throw null exception if BookName argument is null value
-        public void AddBook_NullBookName()
+        public async Task AddBook_NullBookName()
         {
             // Arrange
-            BookAddRequest? req = new() { BookName = null };
+            BookAddRequest? req = _fixture.Build<BookAddRequest>().With(temp => temp.BookName, null as string).Create();
 
             // Act
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                _booksService.AddBook(req);
+                await _booksService.AddBook(req);
             });
         }
 
         [Fact] 
-        public void AddBook_ValidBookName()
+        public async Task AddBook_ValidBookName()
         {
-            // Arrange
-            BookAddRequest? req = new()
-            {
-                BookName = "Sword King",
-                Publisher = "Asura Scans",
-                PublishedDate = DateTime.Parse("2020-01-01"),
-                Genre = GenreOptions.Action,
-                AuthorId = Guid.NewGuid(),
-                IsOngoing = false
-            };
+            // Arrange - AutoFixture
+            BookAddRequest? req = _fixture.Create<BookAddRequest>();
 
-            BookResponse bookRes = _booksService.AddBook(req);
+            BookResponse bookRes = await _booksService.AddBook(req);
 
             // Act
             Assert.True(bookRes.BookName == req.BookName);
         }
 
         [Fact] // Add book int book list if all details are properly filled out 
-        public void AddBook_CorrectDetails() // -> returns an object of BookResponse with newly generated book id
+        public async Task AddBook_CorrectDetails() // -> returns an object of BookResponse with newly generated book id
         {
-            // Arrange
-            BookAddRequest? req = new()
-            {
-                BookName = "Solo Leveling",
-                Publisher = "Asura Scans",
-                PublishedDate = DateTime.Parse("2020-01-01"),
-                Genre = GenreOptions.Action,
-                AuthorId = Guid.NewGuid(),
-                IsOngoing = false
-            };
+            // Arrange - AutoFixture
+            BookAddRequest? req = _fixture.Create<BookAddRequest>();
 
             // Act
-            BookResponse bookRes = _booksService.AddBook(req);
-            List<BookResponse> listBook = _booksService.GetAllBooks();
+            BookResponse bookRes = await _booksService.AddBook(req);
+            List<BookResponse> listBook = await _booksService.GetAllBooks();
 
             // Assert
             Assert.Contains(bookRes, listBook);
@@ -103,34 +103,30 @@ namespace xTests
 
         #region GetBookById
         [Fact] // return null if BookId is null
-        public void GetBookById_NullBookId()
+        public async Task GetBookById_NullBookId()
         {
             Guid? bookId = null;
-            BookResponse? bookRes = _booksService.GetBookById(bookId);
+            BookResponse? bookRes = await _booksService.GetBookById(bookId);
 
             Assert.Null(bookRes);
         }
 
         
         [Fact] // return valid book details if BookId is valid
-        public void GetBookById_ValidBookId()
+        public async Task GetBookById_ValidBookId()
         {
-            AuthorAddRequest authorReq = new() { AuthorName = "Irene" };
-            AuthorResponse authorRes = _authorsService.AddAuthor(authorReq);
+            AuthorAddRequest authorReq = _fixture.Create<AuthorAddRequest>();
+            AuthorResponse authorRes = await _authorsService.AddAuthor(authorReq);
 
             _helper.WriteLine($"authorRes.AuthorName: {authorRes.AuthorName}");
 
-            BookAddRequest? req = new() // bookId will be provided once we call the add book method
-            {
-                BookName = "Solo Leveling", Publisher = "Asura Scans",
-                PublishedDate = DateTime.Parse("2020-01-01"), Genre = GenreOptions.Action,
-                AuthorId = authorRes.AuthorId, IsOngoing = false
-            };
+            BookAddRequest? req = _fixture.Build<BookAddRequest>().With(temp => temp.Publisher, "Yahoo").Create();
 
-            BookResponse bookRes = _booksService.AddBook(req); // expected
+            // AddBook creates a BookId
+            BookResponse bookRes = await _booksService.AddBook(req); // expected
             _helper.WriteLine($"bookRes.AuthorName: {bookRes.AuthorName}"); 
 
-            BookResponse? bookGet = _booksService.GetBookById(bookRes.BookId); // actual
+            BookResponse? bookGet = await _booksService.GetBookById(bookRes.BookId); // actual
             _helper.WriteLine($"bookRes.AuthorName: {bookGet.AuthorName}");
 
             // Assert
@@ -141,27 +137,27 @@ namespace xTests
 
         #region GetAllBooks
         [Fact] // returns an empty list of book list is empty
-        public void GetAllBooks_EmptyBookList()
+        public async Task GetAllBooks_EmptyBookList()
         {
-            List<BookResponse> booksList = _booksService.GetAllBooks();
+            List<BookResponse> booksList = await _booksService.GetAllBooks();
             Assert.Empty(booksList); // checks if a list is empty
         }
 
         [Fact]
-        public void GetAllBooks_ReturnAddedBooks()
+        public async Task GetAllBooks_ReturnAddedBooks()
         {
-            List<BookAddRequest> bookReq = ReusableAddBookMethod();
+            List<BookAddRequest> bookReq = await ReusableAddBookMethod();
             List<BookResponse> booksListAddRes = new();
 
             foreach(var item in bookReq)
             {
-                BookResponse bookRes = _booksService.AddBook(item);
+                BookResponse bookRes = await _booksService.AddBook(item);
                 booksListAddRes.Add(bookRes);
             }
 
             foreach (var n in booksListAddRes) _helper.WriteLine($"Expected: {n.BookName} - {n.Publisher} - {n.AuthorName}"); // output
 
-            List<BookResponse> list = _booksService.GetAllBooks();
+            List<BookResponse> list = await _booksService.GetAllBooks();
             Assert.NotEmpty(list);
 
             foreach (var n in list) _helper.WriteLine($"Actual: {n.BookName} - {n.Publisher} - {n.AuthorName}"); // output
@@ -175,20 +171,20 @@ namespace xTests
 
         #region GetFilteredBooks
         [Fact] // if search text is empty - return all values
-        public void GetFilteredBooks_EmptySearch()
+        public async Task GetFilteredBooks_EmptySearch()
         {
-            List<BookAddRequest> bookReq = ReusableAddBookMethod();
+            List<BookAddRequest> bookReq = await ReusableAddBookMethod();
             List<BookResponse> booksListAddRes = new();
 
             foreach (var item in bookReq)
             {
-                BookResponse bookRes = _booksService.AddBook(item);
+                BookResponse bookRes = await _booksService.AddBook(item);
                 booksListAddRes.Add(bookRes);
             }
 
             foreach (var n in booksListAddRes) _helper.WriteLine($"Expected: {n.BookName} - {n.Publisher} - {n.AuthorName}"); // output
 
-            List<BookResponse> list = _booksService.GetFilteredBooks(nameof(Book.BookName), "");
+            List<BookResponse> list = await _booksService.GetFilteredBooks(nameof(Book.BookName), "");
 
             foreach (var n in list) _helper.WriteLine($"Actual: {n.BookName} - {n.Publisher} - {n.AuthorName}"); // output
 
@@ -199,23 +195,23 @@ namespace xTests
         }
 
         [Fact] // if search text is not empty - return all values based on search property (BookName, Publisher etc)
-        public void GetFilteredBooks_SearchByBookName()
+        public async Task GetFilteredBooks_SearchByBookName()
         {
 
-            List<BookAddRequest> bookReq = ReusableAddBookMethod();
+            List<BookAddRequest> bookReq = await ReusableAddBookMethod();
             List<BookResponse> booksListAddRes = new();
 
             foreach (var item in bookReq)
             {
-                BookResponse bookRes = _booksService.AddBook(item);
+                BookResponse bookRes = await _booksService.AddBook(item);
                 booksListAddRes.Add(bookRes);
             }
 
-            foreach (var n in booksListAddRes) _helper.WriteLine($"Expected: {n.ToString()}"); // output
+            foreach (var n in booksListAddRes) _helper.WriteLine($"Expected: {n}"); // output
 
-            List<BookResponse> list = _booksService.GetFilteredBooks(nameof(Book.BookName), "Sword");
+            List<BookResponse> list = await _booksService.GetFilteredBooks(nameof(Book.BookName), "Sword");
 
-            foreach (var n in list) _helper.WriteLine($"Actual: {n.ToString()}"); // output
+            foreach (var n in list) _helper.WriteLine($"Actual: {n}"); // output
 
             foreach (BookResponse bookRes in booksListAddRes)
             {
@@ -223,28 +219,27 @@ namespace xTests
                 {
                     if (bookRes.BookName.Contains("sword", StringComparison.OrdinalIgnoreCase)) Assert.Contains(bookRes, list);
                 }
-                
             }
         }
         #endregion
 
         #region GetSortedBooks
         [Fact] // sorting by BookName in descending order -> returns books list in descending orders
-        public void GetSortedBooks_SearchByBookName()
+        public async Task GetSortedBooks_SearchByBookName()
         {
-            List<BookAddRequest> bookReq = ReusableAddBookMethod();
+            List<BookAddRequest> bookReq = await ReusableAddBookMethod();
             List<BookResponse> booksListAddRes = new();
 
             foreach (var item in bookReq)
             {
-                BookResponse bookRes = _booksService.AddBook(item);
+                BookResponse bookRes = await _booksService.AddBook(item);
                 booksListAddRes.Add(bookRes);
             }
 
-            List<BookResponse> allBooks = _booksService.GetAllBooks();
+            List<BookResponse> allBooks = await _booksService.GetAllBooks();
             
             // Act
-            List<BookResponse> listSortDesc = _booksService.GetSortedBooks(allBooks, nameof(Book.BookName), SortOrderOptions.Desc);
+            List<BookResponse> listSortDesc = await _booksService.GetSortedBooks(allBooks, nameof(Book.BookName), SortOrderOptions.Desc);
 
             foreach (var n in listSortDesc) _helper.WriteLine($"Actual: {n.ToString()}"); // output
             booksListAddRes = booksListAddRes.OrderByDescending(x => x.BookName).ToList();
@@ -260,45 +255,45 @@ namespace xTests
         #region UpdateBook
 
         [Fact] // null book check
-        public void UpdateBook_NullBook()
+        public async Task UpdateBook_NullBook()
         {
             BookUpdateRequest? bookUpdateReq = null;
 
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                _booksService.UpdateBook(bookUpdateReq);
+                await _booksService.UpdateBook(bookUpdateReq);
             });
 
         }
 
         [Fact] // invalid book Id
-        public void UpdateBook_InvalidBookId()
+        public async Task UpdateBook_InvalidBookId()
         {
             BookUpdateRequest? bookUpdateReq = new() { BookId = Guid.NewGuid() };
 
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                _booksService.UpdateBook(bookUpdateReq);
+                await _booksService.UpdateBook(bookUpdateReq);
             });
 
         }
 
         [Fact] // null book name - throw argument exception
-        public void UpdateBook_NullBookName()
+        public async Task UpdateBook_NullBookName()
         {
             // Arrange
             AuthorAddRequest authorAddReq = new() { AuthorName = "Hanni Pham" };
-            AuthorResponse authorRes = _authorsService.AddAuthor(authorAddReq); // authorRes will no have the newly generated AuthorId
+            AuthorResponse authorRes = await _authorsService.AddAuthor(authorAddReq); // authorRes will no have the newly generated AuthorId
             
             BookAddRequest bookAddReq = new() { BookName = "How To", AuthorId = authorRes.AuthorId, Publisher = "Asura Scans", IsOngoing = true };
-            BookResponse bookRes = _booksService.AddBook(bookAddReq);
+            BookResponse bookRes = await _booksService.AddBook(bookAddReq);
 
             BookUpdateRequest? bookUpdateReq = bookRes.ToBookUpdateRequest();
             bookUpdateReq.BookName = null;
 
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
-                _booksService.UpdateBook(bookUpdateReq); // Act
+                await _booksService.UpdateBook(bookUpdateReq); // Act
             });
         }
 
@@ -307,59 +302,37 @@ namespace xTests
         #region DeleteBook
 
         [Fact] // valid person ID should result in deletion of book - return true fomr DeleteBook() method
-        public void DeleteBook_ValidBookId()
+        public async Task DeleteBook_ValidBookId()
         {
             // Arrange
             AuthorAddRequest authorAddReq = new() { AuthorName = "Irene" };
-            AuthorResponse authorRes = _authorsService.AddAuthor(authorAddReq);
+            AuthorResponse authorRes = await _authorsService.AddAuthor(authorAddReq);
 
-            BookAddRequest? bookAddReq = new() // bookId will be provided once we call the add book method
-            {
-                BookName = "Book B", Publisher = "Asura Scans",
-                PublishedDate = DateTime.Parse("2020-01-01"),Genre = GenreOptions.Action,
-                AuthorId = authorRes.AuthorId, IsOngoing = false
-            };
+            BookAddRequest? bookAddReq = _fixture.Create<BookAddRequest>();
 
-            BookResponse bookRes = _booksService.AddBook(bookAddReq);
+            BookResponse bookRes = await _booksService.AddBook(bookAddReq);
 
             // Assert
-            Assert.True(_booksService.DeleteBook(bookRes.BookId));
+            Assert.True(await _booksService.DeleteBook(bookRes.BookId));
         }
 
         [Fact] // valid person ID should result in deletion of book - return true fomr DeleteBook() method
-        public void DeleteBook_InvalidBookId()
+        public async Task DeleteBook_InvalidBookId()
         {
             // Assert
-            Assert.False(_booksService.DeleteBook(Guid.NewGuid()));
+            Assert.False(await _booksService.DeleteBook(Guid.NewGuid()));
         }
 
         #endregion
 
-        public List<BookAddRequest> ReusableAddBookMethod() // Legacy
+        public async Task<List<BookAddRequest>> ReusableAddBookMethod() // Legacy
         {
             AuthorAddRequest authorReq = new() { AuthorName = "Irene" };
-            AuthorResponse authorRes = _authorsService.AddAuthor(authorReq);
+            AuthorResponse authorRes = await _authorsService.AddAuthor(authorReq);
             _helper.WriteLine($"authorRes.AuthorName: {authorRes.AuthorName}");
 
-            BookAddRequest? req1 = new() // bookId will be provided once we call the add book method
-            {
-                BookName = "Book B",
-                Publisher = "Asura Scans",
-                PublishedDate = DateTime.Parse("2020-01-01"),
-                Genre = GenreOptions.Action,
-                AuthorId = authorRes.AuthorId,
-                IsOngoing = false
-            };
-
-            BookAddRequest? req2 = new() // bookId will be provided once we call the add book method
-            {
-                BookName = "Book A",
-                Publisher = "Asura Scans",
-                PublishedDate = DateTime.Parse("2020-01-01"),
-                Genre = GenreOptions.Action,
-                AuthorId = authorRes.AuthorId,
-                IsOngoing = false
-            };
+            BookAddRequest? req1 = _fixture.Create<BookAddRequest>();
+            BookAddRequest? req2 = _fixture.Create<BookAddRequest>();
 
             List<BookAddRequest> bookReq = new() { req1, req2, };
 

@@ -20,10 +20,10 @@ namespace Services
     public class BooksService : IBooksService
     {
         // private field
-        private readonly BooksDbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
         private readonly IAuthorsService _authorsService;
 
-        public BooksService(BooksDbContext booksDbContext, IAuthorsService authorsService)
+        public BooksService(ApplicationDbContext booksDbContext, IAuthorsService authorsService)
         {
             _dbContext = booksDbContext;
             _authorsService = authorsService;
@@ -43,10 +43,10 @@ namespace Services
             if (bookAddRequest == null) throw new ArgumentNullException(nameof(bookAddRequest));
             if (string.IsNullOrEmpty(bookAddRequest.BookName)) throw new ArgumentException("Book must have a name");
 
-            // Model validations
+            // model validations
             ValidationHelper.ValidateModels(bookAddRequest);
 
-            // Return - convert to book, generate an Id, add new book to list of books and return book as book response
+            // return - convert to book, generate an Id, add new book to list of books and return book as book response
             Book book = bookAddRequest.ToBook();
             book.BookId = Guid.NewGuid();
 
@@ -160,8 +160,7 @@ namespace Services
         public async Task<BookResponse> UpdateBook(BookUpdateRequest bookUpdateRequest)
         {
             if (bookUpdateRequest == null) throw new ArgumentNullException(nameof(Book));
-
-            Services.Helpers.ValidationHelper.ValidateModels(bookUpdateRequest);
+            ValidationHelper.ValidateModels(bookUpdateRequest);
 
             Book? book = await _dbContext.Books.FirstOrDefaultAsync(x => x.BookId == bookUpdateRequest.BookId);
             if (book == null) throw new ArgumentException("Given book doesn't exist");
@@ -223,7 +222,6 @@ namespace Services
                     .Select(temp => temp.ToBookResponse()).ToList();
 
                 persons.AddRange(persons);
-
                 await csvWriter.WriteRecordsAsync(persons);
 
                 // Make sure to flush the writer

@@ -1,5 +1,6 @@
 ﻿using Entities;
 using ServiceContracts.DTO;
+using Microsoft.AspNetCore.Http;
 
 namespace ServiceContracts
 {
@@ -19,5 +20,7 @@ namespace ServiceContracts
         /// <param name="authorId"></param>
         /// <returns></returns>
         Task<AuthorResponse?> GetAuthorById(Guid? authorId);
+
+        Task<int> UploadAuthorsFromExcel(IFormFile formFile);
     }
 }

@@ -1,0 +1,49 @@
+﻿@model AuthorAddRequest
+@{
+    ViewBag.Title = "Upload Authors from Excel";
+}
+
+<h2>Upload Authors from Excel</h2>
+@*accepts file uploads with multipart/form-data enctype*@
+<div class="w-50">
+    <form asp-controller="Authors "asp-action="UploadFromExcel" method="post" enctype="multipart/form-data">
+      @* ExcelFile *@
+          <div class="form-field flex">
+                <div class="w-25">
+                    <label class="form-label pt">Choose an xlsx file</label>
+                </div>
+
+          <div class="flex-1">
+                <input type="file" name="formFile" class="form-input" />
+                    <div class="text-red">@ViewBag.ErrorMessage1</div>
+                    <div class="text-green">@ViewBag.Message1</div>
+                </div>
+          </div>
+
+          <div class="form-field flex">
+                <div class="w-25"></div>
+                <div class="flex-1">
+                    <button type="submit" class="button button-black-back">Upload</button>
+                </div>
+          </div>
+     </form>
+
+     <form asp-controller="Authors" asp-action="UploadByFormInput" method="post">
+        <div class="form-field flex">
+            <div class="w-25">
+                <label for="BookName" class="form-label pt">Book Name</label>
+            </div>
+            <div class="flex-1">
+                <input asp-for="AuthorName" class="form-input"/>
+                <span asp-validation-for="AuthorName" class="text-red"></span>
+            </div>
+        </div>
+        <div class="form-field flex">
+            <div class="w-25"></div>
+            <div class="flex-1">
+                <button type="submit" class="button button-black-back">Upload</button>
+                <div class="text-red">@ViewBag.ErrorMessage2</div>
+            </div>
+        </div>
+     </form>
+</div>

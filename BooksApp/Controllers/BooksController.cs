@@ -91,9 +91,7 @@ namespace BooksApp.Controllers
                 List<string> availableGenres = GetGenres();
 
                 ViewBag.AvailableGenres = availableGenres;
-                ViewBag.Authors = authorRes.Select(x =>
-                    new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }
-                ).ToList(); // Convert the IEnumerable to List<SelectListItem>
+                ViewBag.Authors = authorRes.Select(x => new SelectListItem() { Text = x.AuthorName, Value = x.AuthorId.ToString() }).ToList(); // Convert the IEnumerable to List<SelectListItem>
                 ViewBag.Errors = ModelState.Values.SelectMany(n => n.Errors).Select(e => e.ErrorMessage).ToList();
 
                 return View();

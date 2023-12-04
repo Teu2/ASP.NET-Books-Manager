@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Entities.Migrations
 {
-    [DbContext(typeof(BooksDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20231120044704_InsertBooks_StoredProcedures")]
     partial class InsertBooks_StoredProcedures
     {

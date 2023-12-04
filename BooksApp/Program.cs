@@ -9,7 +9,7 @@ builder.Services.AddControllersWithViews();
 // IoC container
 builder.Services.AddScoped<IAuthorsService, AuthorsService>(); // instantiate only one time - until closing kestral
 builder.Services.AddScoped<IBooksService, BooksService>(); // instantiate only one time - until closing kestral
-builder.Services.AddDbContext<BooksDbContext>(option =>
+builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
 });

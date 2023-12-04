@@ -9,6 +9,8 @@ using Entities;
 using Services;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
+using EntityFrameworkCoreMock;
+using Moq;
 
 namespace xTests
 {
@@ -18,62 +20,68 @@ namespace xTests
 
         public AuthorsServiceTest()
         {
+            List<Author>? authorsInitialData = new();
+            DbContextMock<ApplicationDbContext> dbContextMock = new(new DbContextOptionsBuilder<ApplicationDbContext>().Options); ;
+
+            ApplicationDbContext dbContext = dbContextMock.Object;
+            dbContextMock.CreateDbSetMock(temp => temp.Authors, authorsInitialData);
+            
             // create object of AuthorService
-            _authorsService = new AuthorsService(new BooksDbContext(new DbContextOptionsBuilder<BooksDbContext>().Options));
+            _authorsService = new AuthorsService(dbContext);
         }
 
         #region AddAuthor
         [Fact]
-        public void AddAuthor_NullAuthor() // check for null and throw null exception
+        public async Task AddAuthor_NullAuthor() // check for null and throw null exception
         {
             // Arrange
             AuthorAddRequest? req = null;
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                _authorsService.AddAuthor(req); // Act
+                await _authorsService.AddAuthor(req); // Act
             });
         }
 
         [Fact]
-        public void AddAuthor_AuthorNameIsNull() // when AuthorName is null. throw argument exception
+        public async Task AddAuthor_AuthorNameIsNull() // when AuthorName is null. throw argument exception
         {
             // Arrange
             AuthorAddRequest? req = new AuthorAddRequest() { AuthorName = null };
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() =>
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             {
-                _authorsService.AddAuthor(req); // Act
+                await _authorsService.AddAuthor(req); // Act
             });
         }
 
         [Fact]
-        public void AddAuthor_AuthorIsDuplicate() // When duplicate, throw another arg exception
+        public async Task AddAuthor_AuthorIsDuplicate() // When duplicate, throw another arg exception
         {
             // Arrange
             AuthorAddRequest? req1 = new AuthorAddRequest() { AuthorName = "Ryujin" };
             AuthorAddRequest? req2 = new AuthorAddRequest() { AuthorName = "Ryujin" };
 
             // Assert
-            Assert.Throws<ArgumentException>(() =>
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
                 // Act
-                _authorsService.AddAuthor(req1);
-                _authorsService.AddAuthor(req2);
+                await _authorsService.AddAuthor(req1);
+                await _authorsService.AddAuthor(req2);
             });
         }
 
         [Fact]
-        public void AddAuthor_ProperAuthorNames() // When a proper Author name is supplied, it should add to the list of Authors
+        public async Task AddAuthor_ProperAuthorNames() // When a proper Author name is supplied, it should add to the list of Authors
         {
             // Arrange
             AuthorAddRequest? req1 = new AuthorAddRequest() { AuthorName = "Irene" };
 
             // Act
-            AuthorResponse authorRes = _authorsService.AddAuthor(req1);
-            List<AuthorResponse> authorsFromGetAllAuthors = _authorsService.GetAllAuthors();
+            AuthorResponse authorRes = await _authorsService.AddAuthor(req1);
+            List<AuthorResponse> authorsFromGetAllAuthors = await _authorsService.GetAllAuthors();
 
             // Assert -  Check if newly added author has actually been added to the list of authors
             Assert.True(authorRes.AuthorId != Guid.Empty);
@@ -83,17 +91,17 @@ namespace xTests
 
         #region GetAllAuthors
         [Fact]
-        public void GetAllAuthors_EmptyList()
+        public async Task GetAllAuthors_EmptyList()
         {
             // Act
-            List<AuthorResponse> authorResList = _authorsService.GetAllAuthors();
+            List<AuthorResponse> authorResList = await _authorsService.GetAllAuthors();
 
             // Assert
             Assert.Empty(authorResList);
         }
 
         [Fact]
-        public void GetAllAuthors_AddSomeAuthors()
+        public async Task GetAllAuthors_AddSomeAuthors()
         {
             // Arrange
             List<AuthorAddRequest> authorReqList = new()
@@ -110,11 +118,11 @@ namespace xTests
             List<AuthorResponse> testAuthorList = new();
             foreach(var author in authorReqList)
             {
-                testAuthorList.Add(_authorsService.AddAuthor(author));
+                testAuthorList.Add(await _authorsService.AddAuthor(author));
                 //_authorsService.AddAuthor(author);
             }
 
-            List<AuthorResponse> actualAuthorResList = _authorsService.GetAllAuthors();
+            List<AuthorResponse> actualAuthorResList = await _authorsService.GetAllAuthors();
             //testAuthorList = _authorsService.GetAllAuthors();
 
             foreach(var expectedAuthor in testAuthorList)
@@ -127,27 +135,27 @@ namespace xTests
 
         #region GetAuthorsById
         [Fact]
-        public void GetAuthorById_NullId()
+        public async Task GetAuthorById_NullId()
         {
             // Arrange
             Guid? AuthorId = null;
 
             // Act
-            AuthorResponse? res = _authorsService.GetAuthorById(AuthorId);
+            AuthorResponse? res = await _authorsService.GetAuthorById(AuthorId);
 
             // Assert
             Assert.Null(res);
         }
 
         [Fact]
-        public void GetAuthorById_ValidId()
+        public async Task GetAuthorById_ValidId()
         {
             // Arrange
             AuthorAddRequest addReq = new AuthorAddRequest() { AuthorName = "Jihyo" };
-            AuthorResponse addRes = _authorsService.AddAuthor(addReq);
+            AuthorResponse addRes = await _authorsService.AddAuthor(addReq);
 
             // Act
-            AuthorResponse? getRes = _authorsService.GetAuthorById(addRes.AuthorId);
+            AuthorResponse? getRes = await _authorsService.GetAuthorById(addRes.AuthorId);
 
             // Assert
             Assert.Equal(addRes, getRes);

@@ -15,6 +15,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\Comp Sci\Programming\C#\BooksApp\BooksApp
 build_property._RazorSourceGeneratorDebug = 
 
+[D:/Comp Sci/Programming/C\#/BooksApp/BooksApp/Views/Authors/UploadFromExcel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aG9yc1xVcGxvYWRGcm9tRXhjZWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Comp Sci/Programming/C\#/BooksApp/BooksApp/Views/Books/BooksPDF.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va3NcQm9va3NQREYuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
