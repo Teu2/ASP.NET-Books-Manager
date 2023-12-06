@@ -95,3 +95,7 @@ D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\EPPlus.System.Draw
 D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\Microsoft.IO.RecyclableMemoryStream.dll
 D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
 D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\RepositoryContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\RepositoryContracts.pdb
+D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\Repositories.dll
+D:\Comp Sci\Programming\C#\BooksApp\BooksApp\bin\Debug\net6.0\Repositories.pdb

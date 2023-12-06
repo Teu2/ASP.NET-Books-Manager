@@ -39,8 +39,8 @@ namespace xTests
             dbContextMock.CreateDbSetMock(temp => temp.Books, booksInitialData);
 
             // create object of AuthorService
-            _authorsService = new AuthorsService(dbContext);
-            _booksService = new BooksService(dbContext, _authorsService);
+            _authorsService = new AuthorsService(null);
+            _booksService = new BooksService(null, _authorsService);
             _helper = helper;
         }
 

@@ -27,7 +27,7 @@ namespace xTests
             dbContextMock.CreateDbSetMock(temp => temp.Authors, authorsInitialData);
             
             // create object of AuthorService
-            _authorsService = new AuthorsService(dbContext);
+            _authorsService = new AuthorsService(null);
         }
 
         #region AddAuthor

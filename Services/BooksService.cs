@@ -14,19 +14,18 @@ using CsvHelper;
 using System.Globalization;
 using System.IO;
 using OfficeOpenXml;
+using RepositoryContracts;
 
 namespace Services
 {
     public class BooksService : IBooksService
     {
         // private field
-        private readonly ApplicationDbContext _dbContext;
-        private readonly IAuthorsService _authorsService;
+        private readonly IBooksRepository _BooksRepository;
 
-        public BooksService(ApplicationDbContext booksDbContext, IAuthorsService authorsService)
+        public BooksService(IBooksRepository BooksRepository, IAuthorsService authorsService)
         {
-            _dbContext = booksDbContext;
-            _authorsService = authorsService;
+            _BooksRepository = BooksRepository;
         }
 
         private string FormatDate(int year, int month, int day)
@@ -51,8 +50,7 @@ namespace Services
             book.BookId = Guid.NewGuid();
 
             // Add book | not stored procedure
-            _dbContext.Books.Add(book);
-            await _dbContext.SaveChangesAsync();
+            await _BooksRepository.AddBook(book);
 
             // Add book | stored procedure
             // _dbContext.sp_AddBooks(book);
@@ -64,7 +62,7 @@ namespace Services
 
         public async Task<List<BookResponse>> GetAllBooks()
         {
-            var books = await _dbContext.Books.Include("Author").ToListAsync();
+            var books = await _BooksRepository.GetAllBooks();
             return books.Select(x => x.ToBookResponse()).ToList();
             //return _dbContext.sp_GetAllBooks().Select(x => ConvertBookToBookResponse(x)).ToList();
             //return _dbContext.Books.ToList().Select(n => ConvertBookToBookResponse(n)).ToList(); // SELECT * from books
@@ -74,7 +72,7 @@ namespace Services
         {
             if (bookId == null) return null;
 
-            Book? book = await _dbContext.Books.Include("Author").FirstOrDefaultAsync(temp => temp.BookId == bookId);
+            Book? book = await _BooksRepository.GetBookByBookId(bookId.Value);
             if (book == null) return null;
             
             return book.ToBookResponse();
@@ -90,10 +88,10 @@ namespace Services
             {
                 case nameof(BookResponse.BookName):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.BookName)?
-                    x.BookName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
+                    x.BookName.Contains(searchString) : true)).ToList(); break;
                 case nameof(BookResponse.Publisher):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.Publisher) ?
-                    x.Publisher.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
+                    x.Publisher.Contains(searchString) : true)).ToList(); break;
                 case nameof(BookResponse.Genress): // make search for more than 1 genre
                     List<BookResponse> filtered = new();
                     foreach (var book in allBooks)
@@ -104,13 +102,13 @@ namespace Services
                     break;
                 case nameof(BookResponse.PublishedDate):
                     matchingBooks = allBooks.Where(x => (x.PublishedDate != null) ?
-                    x.PublishedDate.Value.ToString("dd MMM yyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList(); break;
+                    x.PublishedDate.Value.ToString("dd MMM yyy").Contains(searchString) : true).ToList(); break;
                 case nameof(BookResponse.IsOngoing):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.BookName) ?
-                    x.BookName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
+                    x.BookName.Contains(searchString) : true)).ToList(); break;
                 case nameof(BookResponse.AuthorId):
                     matchingBooks = allBooks.Where(x => (!string.IsNullOrEmpty(x.AuthorName) ?
-                    x.AuthorName.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true)).ToList(); break;
+                    x.AuthorName.Contains(searchString) : true)).ToList(); break;
                 default: matchingBooks = allBooks; break;
             }
 
@@ -162,7 +160,7 @@ namespace Services
             if (bookUpdateRequest == null) throw new ArgumentNullException(nameof(Book));
             ValidationHelper.ValidateModels(bookUpdateRequest);
 
-            Book? book = await _dbContext.Books.FirstOrDefaultAsync(x => x.BookId == bookUpdateRequest.BookId);
+            Book? book = await _BooksRepository.GetBookByBookId(bookUpdateRequest.BookId);
             if (book == null) throw new ArgumentException("Given book doesn't exist");
 
             // update matching returned book with bookUpdateRequest details | Entitystate.modified
@@ -175,7 +173,7 @@ namespace Services
             book.Genres = GenresListToString(bookUpdateRequest.GenresList);
             book.IsOngoing = bookUpdateRequest.IsOngoing;
 
-            await _dbContext.SaveChangesAsync(); // save changes
+            await _BooksRepository.UpdateBook(book); // save changes
 
             return book.ToBookResponse();
         }
@@ -197,11 +195,10 @@ namespace Services
         {
             if (bookId == null) throw new ArgumentNullException(nameof(bookId));
 
-            Book? book = await _dbContext.Books.FirstOrDefaultAsync(x => x.BookId == bookId); // check if book is valid
+            Book? book = await _BooksRepository.GetBookByBookId(bookId.Value); // check if book is valid
             if (book == null) return false;
 
-            _dbContext.Books.Remove(_dbContext.Books.First(c => c.BookId == bookId));
-            await _dbContext.SaveChangesAsync();
+            await _BooksRepository.DeleteBookByBookId(book.BookId);
 
             return true;
         }
@@ -217,12 +214,10 @@ namespace Services
                 csvWriter.WriteHeader<BookResponse>(); //PersonID,PersonName,...
                 csvWriter.NextRecord();
 
-                List<BookResponse> persons = _dbContext.Books
-                    .Include("Author")
-                    .Select(temp => temp.ToBookResponse()).ToList();
+                List<BookResponse> books = await GetAllBooks();
 
-                persons.AddRange(persons);
-                await csvWriter.WriteRecordsAsync(persons);
+                books.AddRange(books);
+                await csvWriter.WriteRecordsAsync(books);
 
                 // Make sure to flush the writer
                 await streamWriter.FlushAsync();
@@ -258,7 +253,7 @@ namespace Services
                 }
 
                 int row = 2;
-                List<BookResponse> books = _dbContext.Books.Include("Author").Select(temp => temp.ToBookResponse()).ToList();
+                List<BookResponse> books = await GetAllBooks();
                 foreach (BookResponse book in books)
                 {
                     workSheet.Cells[row, 1].Value = book.BookId;

@@ -1,0 +1,17 @@
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\bin\Debug\net6.0\Repositories.deps.json
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\bin\Debug\net6.0\Repositories.dll
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\bin\Debug\net6.0\Repositories.pdb
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\bin\Debug\net6.0\Entities.dll
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\bin\Debug\net6.0\RepositoryContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\bin\Debug\net6.0\Entities.pdb
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\bin\Debug\net6.0\RepositoryContracts.pdb
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.csproj.AssemblyReference.cache
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.GeneratedMSBuildEditorConfig.editorconfig
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.AssemblyInfoInputs.cache
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.AssemblyInfo.cs
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.csproj.CoreCompileInputs.cache
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.csproj.CopyComplete
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.dll
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\refint\Repositories.dll
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\Repositories.pdb
+D:\Comp Sci\Programming\C#\BooksApp\Repositories\obj\Debug\net6.0\ref\Repositories.dll

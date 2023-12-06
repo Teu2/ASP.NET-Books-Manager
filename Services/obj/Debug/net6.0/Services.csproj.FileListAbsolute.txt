@@ -15,3 +15,5 @@ D:\Comp Sci\Programming\C#\BooksApp\Services\obj\Debug\net6.0\Services.dll
 D:\Comp Sci\Programming\C#\BooksApp\Services\obj\Debug\net6.0\refint\Services.dll
 D:\Comp Sci\Programming\C#\BooksApp\Services\obj\Debug\net6.0\Services.pdb
 D:\Comp Sci\Programming\C#\BooksApp\Services\obj\Debug\net6.0\ref\Services.dll
+D:\Comp Sci\Programming\C#\BooksApp\Services\bin\Debug\net6.0\RepositoryContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\Services\bin\Debug\net6.0\RepositoryContracts.pdb

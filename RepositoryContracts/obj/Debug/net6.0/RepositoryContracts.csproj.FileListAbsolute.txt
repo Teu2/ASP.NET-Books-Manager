@@ -1,0 +1,15 @@
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\bin\Debug\net6.0\RepositoryContracts.deps.json
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\bin\Debug\net6.0\RepositoryContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\bin\Debug\net6.0\RepositoryContracts.pdb
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\bin\Debug\net6.0\Entities.dll
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\bin\Debug\net6.0\Entities.pdb
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.csproj.AssemblyReference.cache
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.GeneratedMSBuildEditorConfig.editorconfig
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.AssemblyInfoInputs.cache
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.AssemblyInfo.cs
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.csproj.CoreCompileInputs.cache
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.csproj.CopyComplete
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\refint\RepositoryContracts.dll
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\RepositoryContracts.pdb
+D:\Comp Sci\Programming\C#\BooksApp\RepositoryContracts\obj\Debug\net6.0\ref\RepositoryContracts.dll

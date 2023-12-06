@@ -7,11 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BooksApp", "BooksApp\BooksA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xTests", "xTests\xTests.csproj", "{5940EFE6-1D3D-4B92-A019-3CE53EAB6E23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{F851F34B-3C8F-4473-8FA2-DAD55A95DBD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{F851F34B-3C8F-4473-8FA2-DAD55A95DBD7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceContracts", "ServiceContracts\ServiceContracts.csproj", "{087E2C10-23A0-4AF1-876C-5D90A29C07AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceContracts", "ServiceContracts\ServiceContracts.csproj", "{087E2C10-23A0-4AF1-876C-5D90A29C07AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{097C42D5-EE58-4ADA-8724-2220AA939539}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{097C42D5-EE58-4ADA-8724-2220AA939539}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryContracts", "RepositoryContracts\RepositoryContracts.csproj", "{ADC89449-47F6-4128-8302-E59856DDBF68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{AA9F440D-5353-4CF0-984C-F278F138CB25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{097C42D5-EE58-4ADA-8724-2220AA939539}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{097C42D5-EE58-4ADA-8724-2220AA939539}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{097C42D5-EE58-4ADA-8724-2220AA939539}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADC89449-47F6-4128-8302-E59856DDBF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADC89449-47F6-4128-8302-E59856DDBF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADC89449-47F6-4128-8302-E59856DDBF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADC89449-47F6-4128-8302-E59856DDBF68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA9F440D-5353-4CF0-984C-F278F138CB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA9F440D-5353-4CF0-984C-F278F138CB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA9F440D-5353-4CF0-984C-F278F138CB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA9F440D-5353-4CF0-984C-F278F138CB25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
